@@ -1,0 +1,16 @@
+[Unit]
+Description=English_study 每日英语口语学习站
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/opt/English_study
+EnvironmentFile=/opt/English_study/.env
+ExecStart=/opt/English_study/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8000
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

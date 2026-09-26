@@ -1,0 +1,16 @@
+# 显式固定规则集，避免 ruff 版本升级后默认规则变化导致检查结果漂移。
+target-version = "py312"
+line-length = 100
+
+[lint]
+select = ["E", "F", "W", "I", "UP", "B", "C4", "SIM", "RUF"]
+ignore = [
+    # 行长由人工控制，中文注释与提示语容易超
+    "E501",
+    # 中文标点会被判成「含糊字符」，本项目正文就是中文
+    "RUF001",
+    "RUF002",
+    "RUF003",
+]
+# scripts/ 与 tests/ 需要在导入 app 之前把项目根加进 sys.path，
+# 因此会有 E402。这两处用行内 noqa 标注，不在这里整体关掉 E402。

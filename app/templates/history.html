@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}历史内容 ｜ 每日英语口语{% endblock %}
+
+{% block content %}
+<div class="section-head">
+  <h1>历史内容</h1>
+  <span class="muted">共 {{ items|length }} 天</span>
+</div>
+
+{% if items %}
+  <ul class="history-list">
+    {% for item in items %}
+      <li>
+        <a href="/day/{{ item.content_date }}">
+          <span class="history-date">{{ item.content_date }}</span>
+          <span class="history-title">{{ item.title }}</span>
+          <span class="history-source muted">
+            {{ item.source_platform }}
+            {% if item.source_author %}· {{ item.source_author }}{% endif %}
+            {% if item.source_work %}· 《{{ item.source_work }}》{% endif %}
+          </span>
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p class="muted">还没有历史内容。</p>
+{% endif %}
+{% endblock %}

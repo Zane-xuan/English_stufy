@@ -1,0 +1,26 @@
+# English_study 依赖清单。版本为本机 conda 环境 english_study 实测通过的版本。
+# 判定环节由 agent 完成，不依赖任何大模型 SDK。
+
+# Web 层
+fastapi==0.141.1
+uvicorn[standard]==0.54.0
+jinja2==3.1.6
+
+# 配置
+python-dotenv==1.2.3
+
+# 定时调度
+apscheduler==3.11.3
+
+# 视频采集与下载
+yt-dlp==2026.8.19
+
+# HTTP 客户端
+httpx==0.28.1
+
+# 语音转写，仅在视频没有现成字幕时需要
+faster-whisper==1.2.1
+
+# 开发与测试
+pytest==9.1.1
+ruff==0.16.9

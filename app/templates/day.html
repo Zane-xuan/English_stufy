@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block title %}{{ content_date }} 每日英语口语{% endblock %}
+
+{% block content %}
+<div class="day-nav">
+  {% if prev_date %}
+    <a href="/day/{{ prev_date }}">← {{ prev_date }}</a>
+  {% else %}
+    <span class="muted">没有更早的内容</span>
+  {% endif %}
+  <span class="day-nav-current">{{ content_date }}</span>
+  {% if next_date %}
+    <a href="/day/{{ next_date }}">{{ next_date }} →</a>
+  {% else %}
+    <span class="muted">已是最新</span>
+  {% endif %}
+</div>
+
+{% if not content %}
+  <section class="empty-state">
+    <h1>今日内容尚未生成</h1>
+    {% if failure_note %}
+      <p class="failure-note">最近一次失败原因：{{ failure_note }}</p>
+    {% endif %}
+    <p class="muted">
+      自动任务每天 {{ daily_run_time }} 采集一次候选，判定环节交给 agent。也可以手动补录：
+    </p>
+    <pre><code>python scripts/run_once.py --stage prepare --date {{ content_date }} --force
+# 把 data/pending/{{ content_date }}.request.json 交给 agent，
+# 结果写到同目录的 {{ content_date }}.response.json
+python scripts/run_once.py --stage finalize --date {{ content_date }} --force</code></pre>
+    {% if has_any %}
+      <p><a href="/history">去看历史内容</a></p>
+    {% else %}
+      <p class="muted">还没有任何历史内容。</p>
+    {% endif %}
+  </section>
+{% else %}
+  <section class="player">
+    {% if content.source_kind == "podcast" %}
+      <audio controls preload="none" src="{{ content.video_embed_url }}"></audio>
+    {% elif content.video_embed_url %}
+      <iframe src="{{ content.video_embed_url }}" allowfullscreen
+              referrerpolicy="no-referrer" loading="lazy"></iframe>
+    {% else %}
+      <p class="muted">该来源不支持内嵌播放，请用下面的来源链接打开。</p>
+    {% endif %}
+  </section>
+
+  <section class="meta">
+    <h1 class="meta-title">{{ content.title }}</h1>
+    <p class="meta-line">
+      <span class="tag">{{ content.source_platform }}</span>
+      {% if source_kind_label %}<span class="tag tag-kind">{{ source_kind_label }}</span>{% endif %}
+      {% if content.source_author %}<span>{{ content.source_author }}</span>{% endif %}
+      {% if content.source_work %}<span>《{{ content.source_work }}》</span>{% endif %}
+      <span class="muted">{{ content.content_date }}</span>
+    </p>
+    <p class="meta-line muted">
+      <a href="{{ content.source_url }}" target="_blank" rel="noopener noreferrer">查看来源</a>
+      {% if content.duration_seconds %}
+        <span>{{ (content.duration_seconds // 60) }} 分 {{ (content.duration_seconds % 60) }} 秒</span>
+      {% endif %}
+      {% if content.motivation_score is not none %}
+        <span>激励性 {{ "%.1f"|format(content.motivation_score) }}</span>
+      {% endif %}
+    </p>
+  </section>
+
+  <section class="transcript-section">
+    <div class="section-head">
+      <h2>原文与译文</h2>
+      <button type="button" id="toggle-btn" class="toggle-btn" data-mode="en">显示译文</button>
+    </div>
+    <div class="transcript" id="transcript">
+      <div class="transcript-en">
+        {% for paragraph in paragraphs_en %}
+          <p>{{ paragraph }}</p>
+        {% endfor %}
+      </div>
+      <div class="transcript-zh" hidden>
+        {% for paragraph in paragraphs_zh %}
+          <p>{{ paragraph }}</p>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <section class="vocab-section">
+    <div class="section-head">
+      <h2>词汇清单</h2>
+      <span class="muted">点词条可在原文中高亮</span>
+    </div>
+    {% if groups %}
+      {% for group in groups %}
+        <div class="vocab-group">
+          <h3>{{ group.label }}<span class="count">{{ group.entries|length }}</span></h3>
+          <ul class="vocab-list">
+            {% for item in group.entries %}
+              <li class="vocab-item" data-term="{{ item.term }}">
+                <div class="vocab-term">
+                  <span class="term">{{ item.term }}</span>
+                  {% if item.phonetic %}<span class="phonetic">{{ item.phonetic }}</span>{% endif %}
+                </div>
+                <div class="vocab-meaning">{{ item.meaning_zh }}</div>
+                {% if item.usage_note %}<div class="vocab-note">{{ item.usage_note }}</div>{% endif %}
+                {% if item.example_sentence %}
+                  <div class="vocab-example">{{ item.example_sentence }}</div>
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p class="muted">今日无提取结果。</p>
+    {% endif %}
+  </section>
+{% endif %}
+{% endblock %}
