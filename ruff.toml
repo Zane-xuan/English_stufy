@@ -1,4 +1,6 @@
 # 显式固定规则集，避免 ruff 版本升级后默认规则变化导致检查结果漂移。
+# 第三方目录原样引入，不参与项目代码风格检查
+extend-exclude = ["third_party"]
 target-version = "py312"
 line-length = 100
 

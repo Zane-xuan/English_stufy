@@ -48,7 +48,7 @@ from app.pipeline.handoff import (
     response_path,
     write_request,
 )
-from app.pipeline.media import download_local_video
+from app.pipeline.media import download_local_media
 from app.pipeline.store import save_content
 from app.pipeline.subtitle import get_transcript
 from app.providers import get_provider
@@ -165,8 +165,8 @@ def finalize(
         candidate.platform,
     )
 
-    if candidate.kind != "podcast":
-        download_local_video(candidate, settings, target)
+    # 本地下载：视频走最佳画质，播客音频走最佳音质（generic 提取器处理直链）
+    download_local_media(candidate, settings, target)
 
     return f"已生成 {target}：{content.title}"
 
