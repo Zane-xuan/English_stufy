@@ -9,14 +9,11 @@ from __future__ import annotations
 import json
 import logging
 import re
-import tempfile
-from functools import lru_cache
-from pathlib import Path
 
 from app.config import Settings
 from app.errors import SubtitleError
 from app.models import Candidate, RawSubtitle, Transcript
-from app.providers.base import PlatformProvider, clean_caption_line, download_audio
+from app.providers.base import PlatformProvider, clean_caption_line
 
 logger = logging.getLogger(__name__)
 
@@ -35,10 +32,10 @@ def get_transcript(
     *,
     allow_transcribe: bool = True,
 ) -> Transcript | None:
-    """拿到字幕。平台有字幕直接用，没有就下载音频转写。
+    """拿到字幕。只用平台现有字幕，不下载任何音视频。
 
-    allow_transcribe 为假时，平台没有字幕就返回 None，不触发转写。
-    prepare 阶段先用它把带字幕的候选挑出来，避免为每条候选都跑一次昂贵的转写。
+    没有平台字幕时返回 None，由调用方跳过该候选。
+    allow_transcribe 保留仅为接口兼容，转写行为已整体移除。
     """
     raw = provider.fetch_raw_subtitle(candidate)
     if raw is not None:
@@ -49,17 +46,7 @@ def get_transcript(
                 from_platform_subtitle=True,
             )
         logger.info("%s 的平台字幕为空", candidate.external_id)
-
-    if not allow_transcribe:
-        return None
-
-    segments = _transcribe_from_url(candidate.url, settings)
-    if not segments:
-        raise SubtitleError(f"{candidate.external_id} 转写结果为空")
-    return Transcript(
-        paragraphs=group_into_paragraphs(segments),
-        from_platform_subtitle=False,
-    )
+    return None
 
 
 def parse_raw_subtitle(raw: RawSubtitle) -> list[str]:
@@ -203,46 +190,3 @@ def group_into_paragraphs(
 
 def _ends_sentence(text: str) -> bool:
     return text.rstrip().rstrip("\"'").endswith(SENTENCE_ENDINGS)
-
-
-def _transcribe_from_url(url: str, settings: Settings) -> list[str]:
-    """下载音频并转写，结束后删掉音频文件。"""
-    with tempfile.TemporaryDirectory(prefix="english_study_") as tmp:
-        audio_path = download_audio(url, settings, Path(tmp))
-        try:
-            return transcribe_audio(audio_path, settings)
-        finally:
-            audio_path.unlink(missing_ok=True)
-
-
-@lru_cache(maxsize=2)
-def _load_whisper_model(model_name: str, device: str):
-    """模型加载很慢，进程内复用。"""
-    from faster_whisper import WhisperModel
-
-    return WhisperModel(model_name, device=device)
-
-
-def transcribe_audio(audio_path: Path, settings: Settings) -> list[str]:
-    """用 faster-whisper 转写。未安装时给出明确的安装提示。"""
-    try:
-        model = _load_whisper_model(settings.whisper_model, settings.whisper_device)
-    except ImportError as exc:
-        raise SubtitleError(
-            "该视频没有现成字幕，需要语音转写，但 faster-whisper 未安装。"
-            "请执行 pip install faster-whisper 后重试。"
-        ) from exc
-    except Exception as exc:
-        raise SubtitleError(f"加载语音转写模型失败：{exc}") from exc
-
-    try:
-        segments, _info = model.transcribe(
-            str(audio_path), language="en", vad_filter=True
-        )
-        return [
-            clean_caption_line(segment.text)
-            for segment in segments
-            if segment.text and segment.text.strip()
-        ]
-    except Exception as exc:
-        raise SubtitleError(f"语音转写失败：{exc}") from exc

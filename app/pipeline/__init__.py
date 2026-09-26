@@ -36,6 +36,7 @@ from app.models import (
     STAGE_SUBTITLE,
     DailyContent,
     PreparedCandidate,
+    Transcript,
 )
 from app.pipeline.analyze import validate_response
 from app.pipeline.collect import collect_candidates
@@ -45,7 +46,6 @@ from app.pipeline.handoff import (
     read_response,
     request_path,
     response_path,
-    transcript_paragraphs_of,
     write_request,
 )
 from app.pipeline.store import save_content
@@ -103,7 +103,7 @@ def finalize(
         decision = validate_response(response_payload, request_payload, settings)
         entries = candidate_entries(request_payload)
         selected = entries[decision.selected_index]
-        paragraphs = transcript_paragraphs_of(selected)
+        paragraphs = decision.selected_paragraphs
     except EnglishStudyError as exc:
         log_stage(target, STAGE_AGENT, RESULT_FAILED, str(exc))
         raise PipelineError(f"agent 结果校验失败：{exc}") from exc
@@ -201,8 +201,8 @@ def _prepare_candidates(
 ) -> list[PreparedCandidate]:
     """取候选并准备字幕，凑够 PREPARE_MAX_CANDIDATES 条交给 agent。
 
-    先只挑有平台字幕的候选；一条都没有时才退回到语音转写。
-    这样避免为每条候选都跑一次昂贵的转写。
+    只用平台现有字幕，不下载任何音视频：没有字幕的候选直接跳过，
+    记进 fetch_log，不做语音转写。
     """
     pool_size = max(
         settings.prepare_max_candidates * 3, settings.candidate_limit_per_platform
@@ -219,7 +219,6 @@ def _prepare_candidates(
         raise PipelineError("候选池里没有未使用过的候选，请检查采集配置")
 
     prepared: list[PreparedCandidate] = []
-    need_transcribe = []
     failures: list[str] = []
 
     for candidate in pool:
@@ -235,14 +234,27 @@ def _prepare_candidates(
                 candidate, provider, settings, allow_transcribe=False
             )
         except SubtitleError as exc:
-            failures.append(f"{candidate.external_id}: {exc}")
-            log_stage(
-                run_date, STAGE_SUBTITLE, RESULT_FAILED, str(exc), candidate.platform
+            logger.warning(
+                "%s 取平台字幕失败（%s），标记为待 agent 搜索字幕",
+                candidate.external_id, exc,
             )
-            continue
+            log_stage(
+                run_date,
+                STAGE_SUBTITLE,
+                RESULT_FAILED,
+                f"取字幕失败，交给 agent 搜索：{exc}",
+                candidate.platform,
+            )
+            transcript = None
 
         if transcript is None:
-            need_transcribe.append(candidate)
+            prepared.append(
+                PreparedCandidate(
+                    index=len(prepared) + 1,
+                    candidate=candidate,
+                    transcript=Transcript(),
+                )
+            )
             continue
 
         prepared.append(
@@ -251,24 +263,7 @@ def _prepare_candidates(
             )
         )
 
-    if not prepared and need_transcribe:
-        candidate = need_transcribe[0]
-        provider = get_provider(candidate.platform, settings)
-        logger.info("%s 没有平台字幕，改用语音转写", candidate.external_id)
-        try:
-            transcript = get_transcript(candidate, provider, settings)  # type: ignore[arg-type]
-        except SubtitleError as exc:
-            failures.append(f"{candidate.external_id}: {exc}")
-            log_stage(
-                run_date, STAGE_SUBTITLE, RESULT_FAILED, str(exc), candidate.platform
-            )
-        else:
-            if transcript is not None:
-                prepared.append(
-                    PreparedCandidate(index=1, candidate=candidate, transcript=transcript)
-                )
-
     if not prepared:
-        detail = "；".join(failures[:3]) if failures else "没有任何候选能取到字幕"
+        detail = "；".join(failures[:3]) if failures else "候选池为空"
         raise PipelineError(f"没有可交给 agent 的候选：{detail}")
     return prepared

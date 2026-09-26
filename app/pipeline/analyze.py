@@ -17,7 +17,10 @@ from app.models import (
     AgentScore,
     VocabularyItem,
 )
-from app.pipeline.handoff import candidate_entries, transcript_paragraphs_of
+from app.pipeline.handoff import (
+    candidate_entries,
+    selected_transcript_of,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -33,7 +36,7 @@ def validate_response(
     selected_index = _parse_selected_index(payload, scores, candidates)
 
     selected = candidates[selected_index]
-    paragraphs = transcript_paragraphs_of(selected)
+    paragraphs = selected_transcript_of(selected, payload)
     source_text = "\n\n".join(paragraphs)
 
     vocabulary = _build_vocabulary(payload, source_text, settings)
@@ -51,6 +54,7 @@ def validate_response(
         vocabulary=vocabulary,
         translation=translation,
         source_kind=_parse_source_kind(payload),
+        selected_paragraphs=paragraphs,
     )
 
 

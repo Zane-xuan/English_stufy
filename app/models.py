@@ -132,6 +132,7 @@ class AgentDecision:
     vocabulary: list[VocabularyItem] = field(default_factory=list)
     translation: list[str] = field(default_factory=list)
     source_kind: str = ""
+    selected_paragraphs: list[str] = field(default_factory=list)
 
     @property
     def selected_score(self) -> float:

@@ -43,6 +43,12 @@ INSTRUCTIONS = [
     "- 打斗、追逐、爆炸等几乎没有对白的片段",
     "- 对白零碎、缺上下文就看不懂的片段",
     "- 充斥人名、地名、专有名词，学不到通用表达的片段",
+    "need_subtitles 为 true 的候选没有平台字幕，不要凭空生成字幕：",
+    "- 若选中了这类候选，先按标题与来源搜索一份适配的英文字幕或完整台词（字幕站、台词站、社区转录均可），",
+    "- 只复制字幕文本本身，不要下载视频或音频文件；",
+    "- 把找到的全文按自然段落写进 response 的 selected_paragraphs，译文段落数必须与它一致；",
+    "- 找不到可靠字幕就改选其他候选；所有候选都选不出来时才把该候选评 0 分。",
+    "词条的 term 必须原样出现在选中候选的字幕文本里（自带或找到的）。",
     "只输出 JSON，不要输出任何解释性文字。",
 ]
 
@@ -57,6 +63,10 @@ RESPONSE_SCHEMA: dict[str, object] = {
         }
     ],
     "selected_index": "number，选中候选的序号，必须出现在 candidate_scores 中",
+    "selected_paragraphs": [
+        "string，仅当选中候选的 need_subtitles 为 true 时必填。",
+        "agent 搜索得到的英文字幕全文，按自然段落划分；其他情况留空数组",
+    ],
     "source_kind": f"string，选中素材的类型，取值 {'、'.join(SOURCE_KINDS)} 之一",
     "vocabulary": [
         {
@@ -138,8 +148,10 @@ def build_request_payload(
                 "title": item.candidate.title,
                 "author": item.candidate.author,
                 "work": item.candidate.work,
+                "url": item.candidate.url,
                 "kind": item.candidate.kind,
                 "duration_seconds": item.candidate.duration_seconds,
+                "need_subtitles": item.transcript.is_empty,
                 "from_platform_subtitle": item.transcript.from_platform_subtitle,
                 "paragraph_count": len(item.transcript.paragraphs),
                 "transcript_paragraphs": item.transcript.paragraphs,
@@ -215,6 +227,37 @@ def transcript_paragraphs_of(candidate: dict[str, object]) -> list[str]:
     if not paragraphs:
         raise HandoffError("候选的字幕为空")
     return paragraphs
+
+
+# agent 搜索回来的字幕上限。3 到 4 分钟视频的字幕全文远够不到这个值，
+# 超过就认定抄进了别的长文，拒收。
+MAX_SEARCHED_SUBTITLE_CHARS = 20_000
+
+
+def selected_transcript_of(
+    candidate: dict[str, object], response_payload: dict[str, object]
+) -> list[str]:
+    """选中候选的字幕段落。
+
+    need_subtitles 候选取 response 里 agent 搜索得到的 selected_paragraphs；
+    其余候选取请求里的 transcript_paragraphs。
+    """
+    if bool(candidate.get("need_subtitles")):
+        raw = response_payload.get("selected_paragraphs")
+        if not isinstance(raw, list):
+            raise HandoffError(
+                "选中候选需要字幕，但结果文件缺少 selected_paragraphs 数组"
+            )
+        paragraphs = [str(item).strip() for item in raw if str(item).strip()]
+        if not paragraphs:
+            raise HandoffError("选中候选需要字幕，但 selected_paragraphs 为空")
+        total_chars = sum(len(part) for part in paragraphs)
+        if total_chars > MAX_SEARCHED_SUBTITLE_CHARS:
+            raise HandoffError(
+                f"selected_paragraphs 过长（{total_chars} 字符），疑似不是字幕文本"
+            )
+        return paragraphs
+    return transcript_paragraphs_of(candidate)
 
 
 def _write_json(path: Path, payload: dict[str, object]) -> None:
