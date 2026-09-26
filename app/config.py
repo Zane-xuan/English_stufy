@@ -95,6 +95,9 @@ class Settings:
     whisper_device: str
     db_path: Path
     pending_dir: Path
+    media_dir: Path
+    media_retention_days: int
+    ytdlp_cookie_file: str
     site_base_url: str
 
     @property
@@ -119,6 +122,10 @@ class Settings:
     @property
     def pending_path(self) -> Path:
         return resolve_path(self.pending_dir)
+
+    @property
+    def media_root(self) -> Path:
+        return resolve_path(self.media_dir)
 
 
 def resolve_path(target: Path) -> Path:
@@ -154,6 +161,9 @@ def load_settings(env_file: Path | None = None) -> Settings:
         whisper_device=_raw("WHISPER_DEVICE", "cpu"),
         db_path=Path(_raw("DB_PATH", "data/english_study.db")),
         pending_dir=Path(_raw("PENDING_DIR", "data/pending")),
+        media_dir=Path(_raw("MEDIA_DIR", "data/media")),
+        media_retention_days=_int("MEDIA_RETENTION_DAYS", 3),
+        ytdlp_cookie_file=_raw("YTDLP_COOKIE_FILE"),
         site_base_url=_raw("SITE_BASE_URL", "http://127.0.0.1:8000"),
     )
 
@@ -172,6 +182,8 @@ def load_settings(env_file: Path | None = None) -> Settings:
         raise ConfigError("VOCAB_MIN_COUNT 不能大于 VOCAB_MAX_COUNT")
     if settings.prepare_max_candidates < 1:
         raise ConfigError("PREPARE_MAX_CANDIDATES 至少为 1")
+    if settings.media_retention_days < 1:
+        raise ConfigError("MEDIA_RETENTION_DAYS 至少为 1 天")
 
     return settings
 

@@ -8,13 +8,13 @@ from datetime import datetime
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, Query, Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel, field_validator
 
 from app import __version__
-from app.config import get_settings
+from app.config import Settings, get_settings
 from app.db import (
     connection,
     count_content,
@@ -33,8 +33,14 @@ from app.models import (
     VOCAB_KIND_LABELS,
     VOCAB_PHRASE,
     VOCAB_WORD,
+    DailyContent,
 )
 from app.pipeline import finalize, pending_status, prepare, today
+from app.pipeline.media import (
+    cleanup_expired_media,
+    find_local_media,
+    local_media_candidates,
+)
 from app.scheduler import is_running, shutdown_scheduler, start_scheduler
 
 logger = logging.getLogger(__name__)
@@ -48,10 +54,21 @@ async def lifespan(_app: FastAPI):
     settings = get_settings()
     init_db()
     start_scheduler(settings)
+    _cleanup_on_startup(settings)
     try:
         yield
     finally:
         shutdown_scheduler()
+
+
+def _cleanup_on_startup(settings: Settings) -> None:
+    """服务启动时清理一次过期媒体文件，失败不阻塞启动。"""
+    try:
+        removed = cleanup_expired_media(settings)
+        if removed:
+            logger.info("启动清理过期媒体文件 %d 个", len(removed))
+    except Exception:  # 清理失败不应拖垮服务
+        logger.warning("启动时媒体清理失败", exc_info=True)
 
 
 app = FastAPI(title="English_study", version=__version__, lifespan=lifespan)
@@ -109,6 +126,10 @@ def _day_context(request: Request, content_date: str) -> dict[str, object]:
         "next_date": next_date,
         "has_any": has_any,
         "failure_note": failure_note,
+        # 双渠道播放：本地下载渠道的播放地址与是否可用
+        "local_media_url": "",
+        "local_media_available": False,
+        "local_media_kind": "",
     }
     if result is None:
         return context
@@ -131,7 +152,50 @@ def _day_context(request: Request, content_date: str) -> dict[str, object]:
         for kind in (VOCAB_WORD, VOCAB_PHRASE, VOCAB_COLLOQUIAL)
     ]
     context["groups"] = [group for group in groups if group["entries"]]
+
+    _fill_local_media_context(context, content)
     return context
+
+
+def _fill_local_media_context(context: dict[str, object], content: DailyContent) -> None:
+    """按内容日期找本地下载好的媒体文件，有就用 <video>，没有就回退在线嵌入。"""
+    settings = get_settings()
+    local = find_local_media(settings, content.content_date)
+    if local is None:
+        return
+    context["local_media_available"] = True
+    # 播客是纯音频，标记为 audio，前端用 <audio>
+    context["local_media_kind"] = "audio" if content.source_kind == "podcast" else "video"
+    context["local_media_url"] = f"/media/{content.content_date}?file={local.name}"
+
+
+@app.get("/media/{content_date}")
+def serve_media(content_date: str, file: str | None = None):
+    """本地下载渠道：按内容日期从固定目录取媒体文件。
+
+    数据库不保存媒体，路径完全由 content_date 派生；?file 指定文件名以区分同日的
+    视频与音频。文件不存在时 404，前端据此回退在线嵌入。
+    """
+    settings = get_settings()
+    root = settings.media_root
+    if not root.is_dir():
+        raise HTTPException(status_code=404, detail="媒体目录不存在")
+
+    paths = local_media_candidates(root, content_date)
+    if not paths:
+        raise HTTPException(status_code=404, detail=f"{content_date} 没有本地媒体文件")
+
+    target: Path | None = None
+    if file:
+        wanted = Path(file).name  # 防目录穿越
+        target = next((p for p in paths if p.name == wanted), None)
+    else:
+        target = find_local_media(settings, content_date)
+    if target is None or not target.is_file():
+        raise HTTPException(status_code=404, detail="指定媒体文件不存在")
+
+    media_type = "audio/mpeg" if target.suffix.lower() in (".mp3", ".m4a", ".wav", ".ogg") else "video/mp4"
+    return FileResponse(target, media_type=media_type, filename=target.name)
 
 
 def _latest_failure(conn, content_date: str) -> str:

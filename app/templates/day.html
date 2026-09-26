@@ -37,9 +37,23 @@ python scripts/run_once.py --stage finalize --date {{ content_date }} --force</c
   </section>
 {% else %}
   <section class="player">
-    {% if content.source_kind == "podcast" %}
+    {% if local_media_available %}
+      {# 本地渠道：finalize 阶段已把视频下载到固定目录，这里直接播放 #}
+      {% if local_media_kind == "audio" %}
+        <audio id="local-media" controls preload="none" src="{{ local_media_url }}"></audio>
+      {% else %}
+        <video id="local-media" controls preload="metadata" src="{{ local_media_url }}"></video>
+        <div id="player-fallback" class="player-fallback" hidden>
+          {% if content.video_embed_url %}
+            <iframe src="{{ content.video_embed_url }}" allowfullscreen
+                    referrerpolicy="no-referrer" loading="lazy"></iframe>
+          {% endif %}
+        </div>
+      {% endif %}
+    {% elif content.source_kind == "podcast" %}
       <audio controls preload="none" src="{{ content.video_embed_url }}"></audio>
     {% elif content.video_embed_url %}
+      {# 在线渠道：本地没有下载文件时回退到平台嵌入播放 #}
       <iframe src="{{ content.video_embed_url }}" allowfullscreen
               referrerpolicy="no-referrer" loading="lazy"></iframe>
     {% else %}

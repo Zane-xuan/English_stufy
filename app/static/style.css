@@ -101,6 +101,13 @@ a:hover {
   border: 0;
 }
 
+.player video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #000;
+}
+
 .player audio {
   display: block;
   width: 100%;

@@ -24,10 +24,11 @@ from app.config import get_settings
 from app.db import init_db
 from app.errors import EnglishStudyError
 from app.pipeline import finalize, pending_status, prepare, today
+from app.pipeline.media import cleanup_expired_media
 
 LOG_FORMAT = "%(asctime)s %(levelname)-7s %(name)s  %(message)s"
 
-STAGES = ("prepare", "finalize")
+STAGES = ("prepare", "finalize", "cleanup-media")
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -75,7 +76,16 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     try:
-        if args.stage == "prepare":
+        if args.stage == "cleanup-media":
+            removed = cleanup_expired_media(settings)
+            message = (
+                f"已清理 {len(removed)} 个过期媒体文件"
+                if removed
+                else "没有需要清理的过期媒体文件"
+            )
+            print(message)
+            return 0
+        elif args.stage == "prepare":
             message = prepare(
                 settings,
                 target,

@@ -88,4 +88,15 @@
       highlightTerm(item.dataset.term || "");
     });
   });
+
+  // 双渠道播放兜底：本地视频加载失败（被清理、下载失败等）时，
+  // 自动切到在线嵌入播放，不让用户对着空白播放器发呆。
+  var localVideo = document.getElementById("local-media");
+  var fallback = document.getElementById("player-fallback");
+  if (localVideo && fallback) {
+    localVideo.addEventListener("error", function () {
+      localVideo.remove();
+      fallback.hidden = false;
+    });
+  }
 })();

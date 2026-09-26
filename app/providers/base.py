@@ -12,7 +12,7 @@ import httpx
 from yt_dlp import YoutubeDL
 
 from app.config import Settings
-from app.errors import CollectError, SubtitleError
+from app.errors import CollectError, MediaError, SubtitleError
 from app.models import Candidate, RawSubtitle
 
 logger = logging.getLogger(__name__)
@@ -259,6 +259,50 @@ def download_audio(url: str, settings: Settings, dest_dir: Path) -> Path:
         matches = sorted(dest_dir.glob("audio.*"))
         if not matches:
             raise SubtitleError("音频下载完成但找不到文件")
+        path = matches[0]
+    return path
+
+
+def download_media_file(url: str, settings: Settings, dest_dir: Path, out_tmpl: str) -> Path:
+    """把视频或音频下载到固定目录，文件名由 outtmpl 决定（按内容日期命名）。
+
+    播客的音频走音频模板，视频的源走视频模板，合并成可播放的媒体文件。
+    数据库不保存媒体，文件名是唯一的定位约定。
+    """
+    dest_dir.mkdir(parents=True, exist_ok=True)
+    options: dict[str, object] = {
+        "quiet": True,
+        "no_warnings": True,
+        "noprogress": True,
+        "format": "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/bestvideo+bestaudio/best",
+        "merge_output_format": "mp4",
+        "outtmpl": out_tmpl,
+        "socket_timeout": 120,
+    }
+    if settings.https_proxy:
+        options["proxy"] = settings.https_proxy
+    if settings.ytdlp_cookie_file:
+        # 部分平台（如 YouTube）对数据中心 IP 要求登录态才能下载，
+        # 配置 cookies 文件后 yt-dlp 会带上登录态绕过反爬
+        options["cookiefile"] = settings.ytdlp_cookie_file
+
+    try:
+        with YoutubeDL(options) as ydl:
+            info = ydl.extract_info(url, download=True)
+            if not info:
+                raise MediaError("媒体下载没有返回信息")
+            filename = ydl.prepare_filename(info)
+    except MediaError:
+        raise
+    except Exception as exc:
+        raise MediaError(f"媒体下载失败：{exc}") from exc
+
+    path = Path(filename)
+    if not path.exists():
+        # yt-dlp 偶尔在合并阶段改了扩展名，按前缀找回真实文件
+        matches = sorted(dest_dir.glob(f"{Path(out_tmpl).stem}.*"))
+        if not matches:
+            raise MediaError("媒体下载完成但找不到文件")
         path = matches[0]
     return path
 

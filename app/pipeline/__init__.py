@@ -48,6 +48,7 @@ from app.pipeline.handoff import (
     response_path,
     write_request,
 )
+from app.pipeline.media import download_local_video
 from app.pipeline.store import save_content
 from app.pipeline.subtitle import get_transcript
 from app.providers import get_provider
@@ -163,6 +164,10 @@ def finalize(
         f"选中候选 {decision.selected_index}，评分 {decision.selected_score}",
         candidate.platform,
     )
+
+    if candidate.kind != "podcast":
+        download_local_video(candidate, settings, target)
+
     return f"已生成 {target}：{content.title}"
 
 

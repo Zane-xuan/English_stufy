@@ -33,3 +33,7 @@ class StoreError(EnglishStudyError):
 
 class PipelineError(EnglishStudyError):
     """整条流水线失败，当天无法产出内容。"""
+
+
+class MediaError(EnglishStudyError):
+    """视频下载与本地媒体文件相关错误。"""
