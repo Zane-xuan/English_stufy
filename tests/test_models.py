@@ -120,3 +120,73 @@ def test_migration_renames_old_column_and_backfills_window(tmp_path, monkeypatch
     assert (clip["focus_start"], clip["focus_end"]) == ("2026-09-28", "2026-09-30")
     assert clip["title"] == "旧记录"
     assert old_index is None, "旧的 learn_date 索引应该被删掉"
+
+
+def test_list_clips_between_returns_only_that_window(conn):
+    _add(conn, "2026-09-21_Resource-A", "2026-09-21", "2026-09-23")
+    _add(conn, "2026-09-24_Resource-B", "2026-09-24", "2026-09-26")
+    _add(conn, "2026-09-28_Resource-C", "2026-09-28", "2026-09-30")
+
+    items = models.list_clips_between(conn, "2026-09-22", "2026-09-28")
+
+    # 区间外的 A 不要；区间内按发布日正序（复习按学习顺序看）
+    assert [item["slug"] for item in items] == [
+        "2026-09-24_Resource-B",
+        "2026-09-28_Resource-C",
+    ]
+
+
+def test_list_clips_between_skips_missing_files(conn):
+    _add(conn, "2026-09-24_Resource-B", "2026-09-24", "2026-09-26")
+    _add(conn, "2026-09-28_Resource-C", "2026-09-28", "2026-09-30")
+    models.set_missing(conn, "2026-09-28_Resource-C", True)
+
+    items = models.list_clips_between(conn, "2026-09-22", "2026-09-28")
+
+    assert [item["slug"] for item in items] == ["2026-09-24_Resource-B"]
+
+
+def test_supplement_defaults_to_empty(conn):
+    _add(conn, "2026-09-28_Resource-A", "2026-09-28", "2026-09-30")
+
+    assert models.get_supplement(conn, "2026-09-28_Resource-A") == ""
+
+
+def test_supplement_is_overwritten(conn):
+    _add(conn, "2026-09-28_Resource-A", "2026-09-28", "2026-09-30")
+
+    models.set_supplement(conn, "2026-09-28_Resource-A", "第一版")
+    assert models.get_supplement(conn, "2026-09-28_Resource-A") == "第一版"
+
+    models.set_supplement(conn, "2026-09-28_Resource-A", "第二版")
+    assert models.get_supplement(conn, "2026-09-28_Resource-A") == "第二版"
+
+    total = conn.execute("SELECT COUNT(*) AS n FROM supplements").fetchone()["n"]
+    assert total == 1, "每期只保留一条补充"
+
+
+def test_blank_supplement_clears_the_row(conn):
+    _add(conn, "2026-09-28_Resource-A", "2026-09-28", "2026-09-30")
+
+    models.set_supplement(conn, "2026-09-28_Resource-A", "写点东西")
+    models.set_supplement(conn, "2026-09-28_Resource-A", "   \n  ")
+
+    assert models.get_supplement(conn, "2026-09-28_Resource-A") == ""
+    total = conn.execute("SELECT COUNT(*) AS n FROM supplements").fetchone()["n"]
+    assert total == 0
+
+
+def test_notes_password_fails_closed_when_unset(monkeypatch):
+    from app import main
+
+    monkeypatch.setattr(config, "NOTES_PASSWORD", "")
+    assert main._notes_authorized("") is False
+    assert main._notes_authorized("随便什么") is False
+
+
+def test_notes_password_accepts_exact_value(monkeypatch):
+    from app import main
+
+    monkeypatch.setattr(config, "NOTES_PASSWORD", "s3cret-口令")
+    assert main._notes_authorized("s3cret-口令") is True
+    assert main._notes_authorized("wrong") is False

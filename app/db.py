@@ -36,6 +36,12 @@ CREATE TABLE IF NOT EXISTS clips (
 
 CREATE INDEX IF NOT EXISTS idx_clips_publish_date ON clips(publish_date);
 CREATE INDEX IF NOT EXISTS idx_clips_focus ON clips(focus_start, focus_end);
+
+CREATE TABLE IF NOT EXISTS supplements (
+    slug       TEXT PRIMARY KEY,
+    body       TEXT NOT NULL DEFAULT '',
+    updated_at TEXT NOT NULL
+);
 """
 
 # 建表之外的字段，旧库缺哪个补哪个。SQLite 的 ADD COLUMN 不校验已有数据，加完补算即可。

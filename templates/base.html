@@ -4,13 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{% block title %}English Study{% endblock %}</title>
-<link rel="stylesheet" href="/static/style.css">
+<link rel="stylesheet" href="/static/style.css?v={{ static_v }}">
 <script>
 // 在首次绘制前恢复抽屉状态，避免展开动画闪一下
 (function () {
   try {
     if (sessionStorage.getItem('drawer') === 'open') {
       document.documentElement.classList.add('drawer-open');
+    }
+    if (sessionStorage.getItem('taskbar') === 'open') {
+      document.documentElement.classList.add('taskbar-open');
     }
   } catch (e) { /* 忽略 */ }
 })();
@@ -19,11 +22,73 @@
 <body>
 <div class="app">
 
+  <aside class="taskbar" id="taskbar" aria-label="今天任务">
+    <div class="taskbar-inner">
+      <div class="taskbar-head">
+        <div class="kicker">Today</div>
+        <button class="iconbtn" id="taskbarClose" type="button" aria-label="收起今天任务">×</button>
+      </div>
+      <h2 class="taskbar-title">今天任务</h2>
+
+      {% if task and task_day %}
+      <div class="taskbar-card">
+        <div class="taskbar-meta">
+          {% if task.period %}<span class="chip">第 {{ "%03d"|format(task.period) }} 期</span>{% endif %}
+          {% if task.category %}<span class="chip hot">{{ task.category }}</span>{% endif %}
+        </div>
+        <div class="taskbar-name">{{ task.title or task.file_name }}</div>
+        {% if task.subtitle %}<div class="taskbar-sub">{{ task.subtitle }}</div>{% endif %}
+        <div class="taskbar-days">服务第 <b>{{ task_day }}</b>/<b>{{ task_total }}</b> 天</div>
+        <a class="btn" href="/?d={{ task.slug }}">打开今天这期</a>
+      </div>
+      {% elif task %}
+      {% if review_clips %}
+      <p class="taskbar-note">今天不在服务区间内，把这周学过的资源过一遍。</p>
+      <div class="taskbar-review">
+        <div class="taskbar-review-head">本周复习 · {{ review_clips|length }} 份</div>
+        <div class="daylist">
+          {% for clip in review_clips %}
+          <a class="dayitem {% if current and clip.slug == current.slug %}active{% endif %}"
+             href="/?d={{ clip.slug }}">
+            <div class="dayitem-date">
+              <span class="chip hot">{{ clip.publish_date }}</span>
+              {% if clip.period %}<span class="chip">第 {{ "%03d"|format(clip.period) }} 期</span>{% endif %}
+            </div>
+            <div class="dayitem-title">{{ clip.title or clip.file_name }}</div>
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+      {% else %}
+      <p class="taskbar-note">今天不在服务区间内，先把最近一期再过一遍吧。</p>
+      <a class="btn ghost" href="/?d={{ task.slug }}">复习最近一期</a>
+      {% endif %}
+      {% else %}
+      <p class="taskbar-note">还没有收录任何资源。</p>
+      {% endif %}
+
+      {% if daily_plan %}
+      <div class="taskbar-plan">
+        <div class="taskbar-plan-head">今天计划 · {{ daily_plan.title }}</div>
+        <ol class="taskbar-plan-steps">
+          {% for step in daily_plan.steps %}<li>{{ step }}</li>{% endfor %}
+        </ol>
+      </div>
+      {% endif %}
+    </div>
+  </aside>
+
   <div class="pane">
     <header class="topbar">
-      <div>
-        <div class="kicker">Daily English · 口语学习站</div>
-        <a class="site-name" href="/">英语口语学习</a>
+      <div class="topbar-lead">
+        <button class="navbtn" id="taskbarToggle" type="button"
+                aria-expanded="false" aria-controls="taskbar">
+          <span class="tchev" aria-hidden="true"></span>今天任务
+        </button>
+        <div>
+          <div class="kicker">Daily English · 口语学习站</div>
+          <a class="site-name" href="/">英语口语学习</a>
+        </div>
       </div>
       <div class="topbar-side">
         {% block now %}{% endblock %}
@@ -100,11 +165,27 @@
       </div>
       {% endif %}
 
+      {% if current %}
+      <div class="supp-editor" data-slug="{{ current.slug }}"
+           data-enabled="{{ 'true' if notes_enabled else 'false' }}">
+        <div class="supp-label">补充 · 这一期</div>
+        <textarea class="supp-input" rows="4" maxlength="10000"
+                  placeholder="给这一期写点补充…">{{ supplement }}</textarea>
+        <div class="supp-actions">
+          <button class="btn supp-save" type="button"{% if not notes_enabled %} disabled{% endif %}>保存</button>
+          <span class="supp-status" role="status" aria-live="polite"></span>
+        </div>
+        {% if not notes_enabled %}
+        <p class="supp-hint">未配置 NOTES_PASSWORD，补充功能已停用。</p>
+        {% endif %}
+      </div>
+      {% endif %}
+
     </div>
   </aside>
 
 </div>
 <div class="backdrop" id="backdrop"></div>
-<script src="/static/app.js"></script>
+<script src="/static/app.js?v={{ static_v }}"></script>
 </body>
 </html>

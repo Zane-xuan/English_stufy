@@ -24,6 +24,11 @@ DB_PATH: Path = _resolve(os.getenv("DB_PATH", "data/clips.db"))
 CONTENT_DIR: Path = _resolve(os.getenv("CONTENT_DIR", "content"))
 ADMIN_TOKEN: str = os.getenv("ADMIN_TOKEN", "")
 SITE_PASSWORD: str = os.getenv("SITE_PASSWORD", "")
+NOTES_PASSWORD: str = os.getenv("NOTES_PASSWORD", "")
+
+# 仅预览用：置 1 允许用 ?today=YYYY-MM-DD 覆盖「今天」，便于查看某一天的页面。
+# 预览模式下不写库。平时保持关闭
+ALLOW_TODAY_OVERRIDE: bool = os.getenv("ALLOW_TODAY_OVERRIDE", "").strip() == "1"
 
 TEMPLATES_DIR: Path = BASE_DIR / "templates"
 STATIC_DIR: Path = BASE_DIR / "static"

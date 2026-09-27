@@ -128,6 +128,26 @@ def set_missing(conn: sqlite3.Connection, slug: str, flag: bool) -> None:
     )
 
 
+def get_supplement(conn: sqlite3.Connection, slug: str) -> str:
+    """读取某一期的补充文字，没有记录时返回空串。"""
+    row = conn.execute(
+        "SELECT body FROM supplements WHERE slug = ?", (slug,)
+    ).fetchone()
+    return row["body"] if row else ""
+
+
+def set_supplement(conn: sqlite3.Connection, slug: str, body: str) -> None:
+    """写入或覆盖某一期的补充；内容为空白时删除该条记录。"""
+    if not body.strip():
+        conn.execute("DELETE FROM supplements WHERE slug = ?", (slug,))
+        return
+    conn.execute(
+        "INSERT INTO supplements (slug, body, updated_at) VALUES (?, ?, ?) "
+        "ON CONFLICT(slug) DO UPDATE SET body = excluded.body, updated_at = excluded.updated_at",
+        (slug, body, now_iso()),
+    )
+
+
 def _where(q: str, category: str, include_missing: bool) -> tuple[str, list]:
     clauses: list[str] = []
     params: list = []
@@ -175,6 +195,17 @@ def get_latest(conn: sqlite3.Connection) -> dict | None:
         "SELECT * FROM clips WHERE is_missing = 0 ORDER BY publish_date DESC, id DESC LIMIT 1"
     ).fetchone()
     return _item(row) if row else None
+
+
+def list_clips_between(conn: sqlite3.Connection, start: str, end: str) -> list[dict]:
+    """返回发布日落在 [start, end] 区间内、文件未缺失的资源，按发布日正序（复习按学习顺序看）。"""
+    rows = conn.execute(
+        "SELECT * FROM clips WHERE is_missing = 0 "
+        "AND publish_date IS NOT NULL AND publish_date >= ? AND publish_date <= ? "
+        "ORDER BY publish_date ASC, id ASC",
+        (start, end),
+    ).fetchall()
+    return [_item(row) for row in rows]
 
 
 def get_current(conn: sqlite3.Connection, today: str) -> dict | None:

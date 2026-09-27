@@ -157,23 +157,28 @@ English_study/
 │   ├── __init__.py
 │   ├── config.py          # 读取 .env，集中配置
 │   ├── db.py              # 连接与建表
-│   ├── models.py          # clips 表的读写
+│   ├── models.py          # clips 与 supplements 表的读写
 │   ├── parser.py          # HTML 元数据解析
+│   ├── plan.py            # 从 LEARNING_PLAN.md 取今天该做哪一步
 │   ├── render.py          # 把原始页面拆成可内嵌的片段
 │   ├── scan.py            # 扫描导入，可作 CLI 运行
 │   └── main.py            # FastAPI 应用与路由
 ├── templates/
-│   ├── base.html          # 外壳：顶栏 + 主内容区 + 历史抽屉
+│   ├── base.html          # 外壳：顶栏 + 今天任务抽屉 + 主内容区 + 历史抽屉
 │   └── index.html         # 主内容区
 ├── static/
 │   ├── style.css
-│   └── app.js             # 抽屉开合
+│   └── app.js             # 左右抽屉开合与补充保存
 ├── content/               # 每期学习 HTML 原样放入
 ├── data/                  # clips.db
 ├── scripts/
-│   └── check_content.py   # 每期 HTML 的交付前自检
+│   ├── check_content.py   # 每期 HTML 的交付前自检
+│   ├── scheduled_fetch.sh # 定时唤起 agent 生成新一期并入库
+│   └── scheduled_fetch.prompt.md
 ├── tests/
+│   ├── test_models.py
 │   ├── test_parser.py
+│   ├── test_plan.py
 │   └── test_render.py
 ├── .env.example
 ├── .gitignore
@@ -215,6 +220,16 @@ English_study/
 
 索引：`slug` 唯一索引；`publish_date` 普通索引，用于倒序列表；`(focus_start, focus_end)` 复合索引，用于按今天选期。
 
+### supplements
+
+| 字段 | 类型 | 约束 | 说明 |
+|---|---|---|---|
+| slug | TEXT | 主键 | 对应 `clips.slug`，一期只保留一条补充 |
+| body | TEXT | 非空，默认 `''` | 补充正文；写入空白即删除该条 |
+| updated_at | TEXT | 非空 | 最近一次写入时间，ISO 8601 |
+
+补充是「只存元数据」的一个例外：它是用户手写、需要长期保存的内容。它按资源挂载（一期一条，可覆盖），写入走 `POST /api/supplements`，读取在渲染主页面时一并带出。新表用 `CREATE TABLE IF NOT EXISTS` 建，老库在下次 `init_db()` 时自动补上，不需要写迁移。
+
 **旧库升级**：`db.init_db()` 在建表建索引之前先跑 `_migrate()`。它会核对 `PRAGMA table_info`，把旧的 `learn_date` 列改名为 `publish_date`，补齐缺的列，删掉旧索引，再给没有服务区间的记录按发布日补算。迁移只补不改已有数据。
 
 ## 7. 接口契约
@@ -223,7 +238,7 @@ English_study/
 
 | 路径 | 说明 |
 |---|---|
-| `GET /` | 主页面。`d` 选份，`q` 与 `category` 筛选抽屉里的列表。不带 `d` 时主内容区显示今天该主攻的那份资源 |
+| `GET /` | 主页面。左侧抽屉是「今天任务」（今天该主攻的那份，周日改为列出近 7 天资源供复盘），主内容区显示该期资源，右侧抽屉列出全部往期并可在底部写「补充」。`d` 选份，`q` 与 `category` 筛选抽屉里的列表。不带 `d` 时主内容区显示今天该主攻的那份资源 |
 | `GET /clip/{slug}` | 旧地址，`307` 转到 `/?d={slug}` |
 | `GET /content/{file_name}` | 原样返回某期 HTML，用于页面上的「打开原始页面」 |
 
@@ -240,6 +255,13 @@ English_study/
 - **请求**：无请求体。请求头必须带 `X-Admin-Token`。
 - **响应**：`{ scanned: int, inserted: int, updated: int, skipped: int, missing: int, errors: [{ file: string, reason: string }] }`
 - **错误码**：`401` 令牌缺失或不匹配；`409` 已有扫描在进行中；`500` 内容目录不存在或不可读。
+
+### `POST /api/supplements`
+
+- **用途**：写入或覆盖某一期的「补充」文字。内容为空白表示删除该条补充。
+- **请求**：JSON 体 `{ slug: string, text: string }`。请求头必须带 `X-Notes-Password`，值等于 `.env` 里的 `NOTES_PASSWORD`。
+- **响应**：`{ slug: string, text: string }`，清空时 `text` 为空串。
+- **错误码**：`401` 口令缺失或不匹配（`NOTES_PASSWORD` 未配置时也一律返回 401）；`400` 缺少 slug；`404` 该 slug 不存在；`413` 超过 10000 字符；`422` 请求体格式非法。
 
 ### `GET /healthz`
 
@@ -268,9 +290,23 @@ English_study/
 
 **抽屉状态**：抽屉开合状态存在 `sessionStorage` 的 `drawer` 键里，并在 `<head>` 里用一段同步脚本在首次绘制前恢复，避免展开动画闪一下。点日期项时先写 `open` 再让浏览器跳转，所以换一天之后抽屉仍是展开的。
 
+**左右抽屉**：`.app` 是 flex 行，从左到右依次是 `.taskbar`（今天任务，自左侧滑出）、`.pane`（主内容）、`aside.sidebar`（历史回顾，自右侧滑出）。两个抽屉共用同一套开合机制：靠 `html` 上的一个类控制（`taskbar-open` 与 `drawer-open`），桌面上动画 `flex-basis` 把中间列挤开，窄屏（≤820px）改成 `position:fixed` 浮层加遮罩，`Escape` 与点遮罩都能收起。开合状态分别存在 `sessionStorage` 的 `taskbar` 与 `drawer` 键，并在首次绘制前恢复。今天任务取自 `models.get_current(today)`，与正在浏览的 `?d=` 相互独立。
+
+**补充的写入鉴权**：站点公开，写补充必须带 `X-Notes-Password` 请求头并等于 `NOTES_PASSWORD`。口令在浏览器里输入一次后存 `localStorage`，之后随请求头发送。`NOTES_PASSWORD` 未配置时 `_notes_authorized()` 直接返回假，一切写入 401，前端按钮也禁用，保证默认关闭。用自定义请求头而不是 Cookie 或表单字段，是因为跨站请求无法伪造非安全列表内的请求头，而应用没有注册 CORS 中间件，所以天然免疫 CSRF；同时也没有可被利用的凭据型 Cookie。口令对比用 `secrets.compare_digest`，比较前两侧都 `.encode("utf-8")`，避免非 ASCII 口令触发 `TypeError`。
+
+**补充的转义**：补充文字由用户输入，模板里一律交给 Jinja 自动转义，不使用 `|safe`，避免存储型 XSS。
+
 **日期来源**：`publish_date` 一律取自文件名前缀，不使用服务器当前时间，避免时区与补录导致日期错位。只有「今天是哪天」用到服务器当天日期。
 
 **扫描并发**：SQLite 同一时刻只允许一个写入者。用进程内锁保证同一进程内不并发扫描，第二个请求返回 409。
+
+**今天该做哪一步**：学习计划把每份资源拆成「初识 → 拆解跟读 → 输出」三天，周日综合复盘。`app/plan.py` 读取 `LEARNING_PLAN.md` 第 3 节，按资源服务第几天取对应小节（第 1 天初识、第 2 天拆解跟读、第 3 天及以后输出，不在任何区间取复盘），只取标题与编号步骤，展示在「今天任务」抽屉里。计划正文只保留在文档一处，站点不复制内容，改文档即改站点；`LEARNING_PLAN.md` 不存在或格式对不上时静默不显示，不影响页面。解析结果按（路径, mtime, 大小）缓存。
+
+**周日复盘入口**：今天不在任何资源的服务区间内时（按服务区间规则就是周日），「今天任务」不再只指向最新一份，而是列出**近 7 天发布过**的资源（`models.list_clips_between`，按发布日正序，跳过文件缺失的），正好对应本周的两份，配合「综合复盘日」的计划一起用。近 7 天一份都没有时才退回「复习最近一期」按钮。
+
+**静态资源缓存**：页面里引用的 `style.css` 与 `app.js` 都带 `?v=<static 目录最新修改时间>`，静态文件一改地址就变，浏览器与 CDN 不会继续用旧缓存；HTML 响应另带 `Cache-Control: no-cache`，保证外壳标记始终最新。改了静态文件只需重启服务，不需要手动清缓存。
+
+**预览某一天（可选开关）**：`.env` 里 `ALLOW_TODAY_OVERRIDE=1` 时，主页面接受 `?today=YYYY-MM-DD` 覆盖「今天」，用来查看某一天的页面（例如周日的复盘视图）。该日期会写进 `preview_today` cookie，预览期间点选资源不会跳出这一天；`?today=off` 退出。此模式下**跳过一切写库动作**（不标记文件缺失），保证只读。开关默认关闭，关闭时参数与 cookie 一律忽略。
 
 **编码**：读写 HTML 一律显式指定 `encoding="utf-8"`，不依赖系统默认编码，避免 Windows 上按 GBK 解析出错。
 
@@ -280,9 +316,9 @@ English_study/
 
 目标与学习节奏以 [学习计划](LEARNING_PLAN.md) 为准，本节只讲怎么把一份资源做成一个页面。
 
-每周一与周四各生成一期，命名 `content/YYYY-MM-DD_<Title>.html`，放进 `content/` 后由扫描收录。`content/` 下 2026-09-24 至 09-27 的四期是按旧的「每天一期」约定产出的，与现行节奏不一致。
+每周一与周四各生成一期，命名 `content/YYYY-MM-DD_<Title>.html`，放进 `content/` 后由扫描收录。
 
-**执行方式**：生产端保持 agent 驱动，不写死抓取脚本。选素材、取逐字稿、写页面、跑自检这几步都由 agent 按本节约定完成，再把结果写入 `content/`。最终部署形态是远程服务器上运行 hermes-agent，由它的定时任务在每周一、周四触发。本机已装有一份 hermes-agent，位于 `~/AppData/Local/hermes`，其中 `cron/` 放定时任务、`skills/` 放技能。
+**执行方式**：生产端保持 agent 驱动，不写死抓取脚本。选素材、取逐字稿、写页面、跑自检这几步都由 agent 按本节约定完成，再把结果写入 `content/`。定时触发由系统 cron 承担：服务器上每周一、周四北京时间 06:00 运行 `scripts/scheduled_fetch.sh`，脚本以非交互方式唤起本机的 CodeBuddy agent 执行本节任务，生成后再统一走扫描入库。agent 的具体实现可替换（本机用 CodeBuddy），只要遵守本节约定与下面的边界即可。
 
 **agent 与站点的边界**：agent 只负责往 `content/` 写文件，不直接改数据库。入库统一走 `python -m app.scan` 或 `POST /api/scan`，保证解析、增量判断与标记缺失的逻辑只有一处。这样换 agent、换服务器都不影响站点。
 
@@ -344,13 +380,11 @@ pytest -q
 
 **环境要求**：Python 3.13。Windows 本地开发或 Linux 服务器均可，不依赖系统级编译工具。
 
-**配置**：需要 `HOST`、`PORT`、`DB_PATH`、`CONTENT_DIR`、`ADMIN_TOKEN`、`SITE_PASSWORD`，见 `.env.example`。
+**配置**：需要 `HOST`、`PORT`、`DB_PATH`、`CONTENT_DIR`、`ADMIN_TOKEN`、`SITE_PASSWORD`、`NOTES_PASSWORD`，见 `.env.example`。
 
 ## 11. 待确认事项
 
 - [ ] 是否需要给整站加访问口令（`SITE_PASSWORD`），还是仅靠服务器防火墙与 IP 白名单
-- [ ] 每周新增一期后，由服务器上的 cron 调 `POST /api/scan`，还是调 `python -m app.scan`
-- [ ] `content/` 下按旧的每日节奏产出的四期，是保留还是按每周两份重排
-- [ ] hermes-agent 在服务器上的定时任务怎么配置，项目路径与权限如何划分
+- [ ] 定时任务连续失败时如何告警（当前只写 `/var/log/english-fetch.log`，需人工查看）
 - [ ] 往期数量增长到多少需要分页，当前按一次返回 20 条设计
 - [ ] `content/` 下的 HTML 是否纳入 git 版本管理

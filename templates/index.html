@@ -2,6 +2,11 @@
 {% block title %}{% if current %}{{ current.title or current.file_name }} · {% endif %}English Study{% endblock %}
 
 {% block now %}
+{% if preview_date %}
+<span class="now preview">
+  预览 <b>{{ preview_date }}</b> · <a href="/?today=off">退出预览</a>
+</span>
+{% endif %}
 {% if current %}
 <span class="now">
   {% if day_index %}今天 · 资源第 <b>{{ day_index }}</b>/<b>{{ day_total }}</b> 天{% else %}今天不在这份资源的服务区间内{% endif %}

@@ -32,6 +32,12 @@ Windows 上激活脚本在 `.venv/Scripts/activate`，Linux 上在 `.venv/bin/ac
 python -c "import secrets; print(secrets.token_urlsafe(32))"
 ```
 
+再设置 `NOTES_PASSWORD`，它保护页面上保存「补充」的写入。留空则补充功能整体停用。可以这样生成：
+
+```bash
+python -c "import secrets; print(secrets.token_urlsafe(12))"
+```
+
 ## 3. 快速上手
 
 1. 把一期学习页 HTML 放进 `content/`，文件名形如 `2026-09-27_Good-Will-Hunting.html`。
@@ -89,6 +95,20 @@ curl -X POST http://127.0.0.1:8000/api/scan -H "X-Admin-Token: ${ADMIN_TOKEN}"
 ```bash
 cp data/clips.db data/clips.db.bak
 ```
+
+### 写「补充」
+
+主页面左上角的「今天任务」抽屉显示今天该主攻的那一期，与你在看哪一期无关，点左上角「今天任务」按钮展开。右上角「历史回顾」抽屉拉到最下方是「补充 · 这一期」输入框，写的是当前正在看的那一期的补充：点「保存」即存，一期只保留一条，再写就是覆盖，清空内容保存即删除。
+
+首次保存会弹出口令输入框，填 `.env` 里的 `NOTES_PASSWORD`，输一次后浏览器会记住，不用反复输入。这个口令只管写入，站点本身仍然公开可访问。
+
+补充存在 SQLite 的 `supplements` 表里，跟着 `data/clips.db` 一起备份。
+
+### 预览某一天的页面
+
+想知道某个周日「今天任务」长什么样，可以临时打开预览开关：把 `.env` 里的 `ALLOW_TODAY_OVERRIDE` 设为 `1`，重启服务，然后访问 `/?today=2026-10-04`（换成你想看的那天）。页面右上角会显示「预览 … · 退出预览」，点退出或访问 `/?today=off` 就回到真实日期。
+
+预览模式只读，不会改动数据库。看完把开关改回空并重启即可。
 
 ### 部署到服务器
 
@@ -149,14 +169,29 @@ sudo nginx -t
 sudo systemctl reload nginx
 ```
 
-### 定时扫描
+### 定时生成与扫描
 
-内容每周一、周四更新，扫描跟内容节奏无关，每天跑一次即可：没变动的文件会被跳过，开销很小。
+每周一、周四北京时间 06:00，服务器上的 cron 会调用 `scripts/scheduled_fetch.sh`。脚本以非交互方式唤起本机的 CodeBuddy agent，按 [开发文档](DEV_DOC.md) 第 9 节的约定生成新一期页面并自检，随后统一执行 `python -m app.scan` 入库，日志写到 `/var/log/english-fetch.log`。
+
+服务器时区是 UTC，所以 root 的 crontab 里写的是 UTC 时间：
 
 ```bash
-crontab -e
-# 写入这一行
-0 6 * * * cd /opt/english-study && .venv/bin/python -m app.scan >> /var/log/english-scan.log 2>&1
+sudo crontab -e
+# 22:00 UTC 的周日/周三 = 北京时间周一/周四 06:00
+0 22 * * 0,3 /opt/English_study/scripts/scheduled_fetch.sh
+```
+
+想手动试跑一次：
+
+```bash
+sudo /opt/English_study/scripts/scheduled_fetch.sh
+tail -n 50 /var/log/english-fetch.log
+```
+
+不生成新内容、只想重新收录 `content/` 下已有的 HTML 时，仍可单独跑扫描：
+
+```bash
+cd /opt/English_study && .venv/bin/python -m app.scan
 ```
 
 ## 5. 常见问题
@@ -172,6 +207,9 @@ A：文件被移动、改名或删除了。把文件放回 `content/` 并重新�
 
 **Q：调扫描接口返回 401。**
 A：请求头里的令牌与 `.env` 里的 `ADMIN_TOKEN` 不一致。确认两边完全相同，注意别带多余空格。
+
+**Q：保存补充时提示「口令不正确」或「未配置口令，无法保存」。**
+A：前者是口令输错了，再点一次保存会重新让你输入；后者是 `.env` 里 `NOTES_PASSWORD` 为空，补充功能被停用，填上口令并重启服务即可（`systemctl restart english-study`）。
 
 **Q：页面里的中文变成乱码。**
 A：HTML 文件不是 UTF-8 编码。用编辑器另存为 UTF-8 后重新扫描。
