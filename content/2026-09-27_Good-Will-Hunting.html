@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>每日英语影视片段 · 2026-09-27 · Good Will Hunting 经典独白</title>
+<style>
+  :root{
+    --bg:#f7f6f3;
+    --card:#ffffff;
+    --ink:#16181d;
+    --ink-soft:#4a4f58;
+    --ink-faint:#8b9099;
+    --line:#e6e3dd;
+    --accent:#1c6b4a;
+    --accent-soft:#eaf5ef;
+    --gold:#8a6d1f;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"Segoe UI","PingFang SC","Microsoft YaHei",-apple-system,sans-serif;
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:40px 22px 80px;}
+
+  /* ---------- header ---------- */
+  .masthead{
+    border-top:6px solid var(--ink);
+    border-bottom:1px solid var(--line);
+    padding:22px 0 18px;
+    margin-bottom:30px;
+  }
+  .kicker{font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:10px;}
+  h1{font-size:31px;line-height:1.28;margin:0 0 12px;font-weight:800;letter-spacing:-.01em;}
+  h1 .sub{display:block;font-size:15px;font-weight:500;color:var(--ink-faint);letter-spacing:0;margin-top:8px;}
+  .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;}
+  .chip{font-size:12.5px;padding:4px 11px;border-radius:999px;background:#efece6;color:var(--ink-soft);border:1px solid var(--line);}
+  .chip.hot{background:var(--accent-soft);color:var(--accent);border-color:#c8e3d5;font-weight:600;}
+
+  /* ---------- sections ---------- */
+  section{margin-bottom:38px;}
+  h2{font-size:19px;font-weight:800;margin:0 0 16px;padding-left:12px;border-left:4px solid var(--accent);letter-spacing:-.01em;}
+  h3{font-size:15px;font-weight:700;color:var(--ink-soft);margin:22px 0 10px;}
+  p{margin:0 0 12px;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 22px;box-shadow:0 1px 2px rgba(20,20,30,.04);}
+
+  /* ---------- watch box ---------- */
+  .watch{display:flex;flex-wrap:wrap;gap:10px;}
+  .watch a{flex:1 1 220px;display:block;text-decoration:none;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;transition:.15s;}
+  .watch a:hover{border-color:var(--accent);box-shadow:0 3px 12px rgba(28,107,74,.10);transform:translateY(-1px);}
+  .watch .site{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);font-weight:700;}
+  .watch .ttl{font-size:14.5px;font-weight:700;margin-top:5px;line-height:1.45;}
+  .watch .note{font-size:12.5px;color:var(--ink-faint);margin-top:4px;}
+
+  /* ---------- script ---------- */
+  .langbar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:16px;}
+  .langbtn{
+    font-family:inherit;font-size:14px;font-weight:700;color:#fff;background:var(--ink);
+    border:none;border-radius:999px;padding:11px 24px;cursor:pointer;letter-spacing:.02em;
+    transition:.18s;box-shadow:0 2px 8px rgba(20,20,30,.14);
+  }
+  .langbtn:hover{background:var(--accent);transform:translateY(-1px);}
+  .langbtn:active{transform:translateY(0);}
+  .hint{font-size:12.5px;color:var(--ink-faint);line-height:1.5;}
+  .hint b{color:var(--gold);}
+
+  .script{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:24px 26px;box-shadow:0 1px 2px rgba(20,20,30,.04);}
+  .turn{margin:0 0 16px;font-size:16.5px;line-height:1.82;font-family:Georgia,"Times New Roman",serif;}
+  .turn:last-child{margin-bottom:0;}
+  .spk{
+    font-family:"Segoe UI","PingFang SC",sans-serif;font-size:11.5px;font-weight:800;
+    letter-spacing:.08em;text-transform:uppercase;margin-right:8px;vertical-align:1.5px;
+  }
+  .spk.sean{color:var(--accent);}
+  .spk.will{color:#1f6feb;}
+  .script[data-lang="en"] .zh-text{display:none;}
+  .script[data-lang="zh"] .en-text{display:none;}
+  .script[data-lang="zh"] .turn{font-family:"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;font-size:15.5px;line-height:1.95;color:var(--ink-soft);}
+
+  .tgt{cursor:pointer;border-radius:3px;padding:0 1px;transition:background .2s,box-shadow .2s;}
+  .tgt:hover{background:#eef4ff;}
+  .tgt.active{background:#ffe066;box-shadow:0 0 0 3px rgba(255,224,102,.8);}
+  @keyframes flash{0%{background:#fff6bf;box-shadow:0 0 0 7px rgba(255,224,102,.55);}100%{background:#ffe066;box-shadow:0 0 0 3px rgba(255,224,102,.8);}}
+  .tgt.flash{animation:flash .65s ease-out;}
+
+  /* ---------- vocab ---------- */
+  table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:14px;}
+  thead th{background:#f1eee8;text-align:left;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);padding:11px 14px;border-bottom:1px solid var(--line);font-weight:700;}
+  tbody td{padding:12px 14px;border-bottom:1px solid #f1efe9;vertical-align:top;line-height:1.6;}
+  tbody tr:last-child td{border-bottom:none;}
+  td.term{font-weight:700;color:var(--ink);white-space:nowrap;font-family:Georgia,"Times New Roman",serif;}
+  td.mean{color:var(--ink-soft);}
+  .tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 7px;border-radius:5px;background:var(--accent-soft);color:var(--accent);margin-right:6px;vertical-align:1px;}
+  .ex{color:var(--ink-faint);font-style:italic;display:block;margin-top:5px;font-size:13px;}
+  .vrow{cursor:pointer;transition:background .18s;}
+  .vrow:hover{background:#fbfaf5;}
+  .vrow.active{background:#fff8d9;}
+  .vrow.active td.term{color:var(--accent);}
+  .clickable-note{font-size:12.5px;color:var(--ink-faint);margin:-6px 0 14px;}
+  .clickable-note b{color:var(--gold);}
+
+  /* ---------- pronunciation ---------- */
+  .pron{background:#fbfaf7;border-left:3px solid var(--gold);border-radius:0 10px 10px 0;padding:14px 18px;font-size:14px;}
+  .pron div{margin-bottom:8px;}
+  .pron div:last-child{margin-bottom:0;}
+  .pron b{color:var(--ink);}
+  .cult{background:var(--accent-soft);border-radius:10px;padding:14px 18px;font-size:13.5px;color:var(--ink-soft);}
+  .cult div{margin-bottom:7px;}
+  .cult div:last-child{margin-bottom:0;}
+  .cult b{color:var(--ink);}
+
+  footer{margin-top:50px;padding-top:20px;border-top:1px solid var(--line);font-size:12.5px;color:var(--ink-faint);text-align:center;}
+  @media(max-width:600px){
+    h1{font-size:24px;}
+    .wrap{padding:24px 16px 60px;}
+    td.term{white-space:normal;}
+    .script{padding:18px 16px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="kicker">Daily English · Clip 004 · 影视经典独白</div>
+    <h1>用一段话拆穿一个天才：公园长椅上的独白
+      <span class="sub">Good Will Hunting (1997) — Sean's Park Bench Monologue</span>
+    </h1>
+    <div class="meta">
+      <span class="chip hot">2026-09-27 · 周日</span>
+      <span class="chip">类型 · 影视独白</span>
+      <span class="chip">时长 ≈ 3 分钟</span>
+      <span class="chip">难度 · 中高级</span>
+      <span class="chip">口音 · 美音（波士顿）</span>
+    </div>
+  </header>
+
+  <!-- ============ 观看 ============ -->
+  <section>
+    <h2>① 先看片段</h2>
+    <div class="watch">
+      <a href="https://www.youtube.com/watch?v=8GY3sO47YYo" target="_blank" rel="noopener">
+        <div class="site">YouTube · HBO Max（官方）</div>
+        <div class="ttl">Robin Williams' Speech | Good Will Hunting | Max</div>
+        <div class="note">完整独白，画质最好</div>
+      </a>
+      <a href="https://www.youtube.com/watch?v=52SG2-g54X4" target="_blank" rel="noopener">
+        <div class="site">YouTube · 备选</div>
+        <div class="ttl">"You're just a kid" | Good Will Hunting | CLIP</div>
+        <div class="note">同一段，片长更短</div>
+      </a>
+      <a href="https://www.bilibili.com/bangumi/play/ep744637" target="_blank" rel="noopener">
+        <div class="site">Bilibili · 正片</div>
+        <div class="ttl">《心灵捕手》正片（中英字幕）</div>
+        <div class="note">公园长椅段约在第 60 分钟前后</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ============ 背景 ============ -->
+  <section>
+    <h2>② 场景背景</h2>
+    <div class="card">
+      <p>威尔·亨廷（Will Hunting）是麻省理工的一名清洁工，解得出教授都解不开的数学题，却把天赋用来对抗所有人——他的防备心来自一段被虐待的童年。</p>
+      <p>心理医生肖恩·麦圭尔（Sean Maguire）没有跟他硬碰硬。他把威尔约到公园长椅上，用一段独白，把他"用书本知识武装起来的壳"一层层剥开。</p>
+      <p style="margin-bottom:0;">这段独白是影史最著名的独白之一，也是罗宾·威廉姆斯拿下奥斯卡最佳男配角的原因。它的力量不在词藻，而在<b>停顿、语气和层层递进</b>。</p>
+    </div>
+    <p style="font-size:13px;color:var(--ink-faint);margin-top:12px;">
+      ⚠️ 台词为影片原声，含少量粗口（如 "scared shitless"、"don't give a shit"），跟读时可自行略过。
+    </p>
+  </section>
+
+  <!-- ============ 台词 ============ -->
+  <section>
+    <h2>③ 原文独白</h2>
+    <div class="langbar">
+      <button class="langbtn" id="langBtn">🌐 显示中文译文</button>
+      <div class="hint">默认显示<b>英文原文</b>；点击左侧按钮整段切换为中文。<br>点击下方词汇表中任意一行 → 对应词句会在原文中<b>高亮定位</b>。</div>
+    </div>
+
+    <div class="script" id="script" data-lang="en">
+
+      <p class="turn"><span class="spk will">Will</span><span class="en-text">So what's this? A Taster's Choice moment between guys? This is really nice. You got a thing for swans? Is this like a <span class="tgt" data-key="k28">fetish</span>? It's something, like, maybe we need to devote some time to?</span><span class="zh-text">这算什么？咱俩之间来一场"雀巢咖啡时刻"？真温馨。你对天鹅有特殊爱好？这是某种癖好吗？是不是……咱们得花点时间聊聊这个？</span></p>
+
+      <p class="turn"><span class="spk sean">Sean</span><span class="en-text">I thought about what you said to me the other day, about my painting. <span class="tgt" data-key="k12">Stayed up half the night</span> thinking about it. Something <span class="tgt" data-key="k11">occurred to me</span> and I <span class="tgt" data-key="k13">fell into a deep, peaceful sleep</span> and haven't thought about you since. You know what occurred to me?</span><span class="zh-text">我想了想你前几天跟我说的、关于我那幅画的话。我半宿没睡，一直在想。后来有件事我想通了，然后就沉沉睡去，之后再没想起过你。你知道我想通了什么吗？</span></p>
+
+      <p class="turn"><span class="spk will">Will</span><span class="en-text">No.</span><span class="zh-text">不知道。</span></p>
+
+      <p class="turn"><span class="spk sean">Sean</span><span class="en-text">You're just a kid. You <span class="tgt" data-key="k3">don't have the faintest idea</span> what you're talking about.</span><span class="zh-text">你还只是个孩子。你压根儿不知道自己在说什么。</span></p>
+
+      <p class="turn"><span class="spk will">Will</span><span class="en-text">Why, thank you.</span><span class="zh-text">哦，多谢夸奖。</span></p>
+
+      <p class="turn"><span class="spk sean">Sean</span><span class="en-text">It's all right. You've never <span class="tgt" data-key="k15">been out of Boston</span>.</span><span class="zh-text">没关系。你从没离开过波士顿。</span></p>
+
+      <p class="turn"><span class="spk will">Will</span><span class="en-text">Nope.</span><span class="zh-text">没错。</span></p>
+
+      <p class="turn"><span class="spk sean">Sean</span><span class="en-text">So if I asked you about art, you'd probably <span class="tgt" data-key="k1">give me the skinny on</span> every art book ever written. Michelangelo? You know a lot about him. Life's work, <span class="tgt" data-key="k14">political aspirations</span>, him and the Pope, sexual orientation, <span class="tgt" data-key="k2">the whole works</span>, right? But I bet you can't tell me what it smells like in the Sistine Chapel. You've never actually stood there and looked up at that beautiful ceiling. Seen that.</span><span class="zh-text">所以，如果我问你艺术，你大概能把所有艺术书上的门道都给我讲一遍。米开朗基罗？你对他了解得不少：毕生事业、政治抱负、他和教皇、性取向，全套，对吧？但我打赌你说不出西斯廷教堂里是什么气味。你从没真正站在那儿，抬头看过那片美丽的天顶。你从没见过。</span></p>
+
+      <p class="turn"><span class="spk sean">Sean</span><span class="en-text">If I asked you about women, you'd probably give me a <span class="tgt" data-key="k23">syllabus</span> of your personal favorites. You may have even been laid a few times. But you can't tell me what it feels like to <span class="tgt" data-key="k16">wake up next to a woman</span> and feel truly happy. You're a tough kid.</span><span class="zh-text">如果我问你女人，你大概能给我列一份你个人偏好的清单。你也许还上过几次床。但你说不出，清晨醒来、身边躺着一个女人、心里感到真正幸福，是什么滋味。你是个硬骨头的小子。</span></p>
+
+      <p class="turn"><span class="spk sean">Sean</span><span class="en-text">I ask you about war, you'd probably <span class="tgt" data-key="k10">throw Shakespeare at me</span>, right? "Once more into the breach, dear friends." But you've never been near one. You've never held your best friend's head in your lap and watched him <span class="tgt" data-key="k6">gasp his last breath</span>, looking to you for help.</span><span class="zh-text">我问你战争，你大概会甩莎士比亚给我，对吧？"再次冲进缺口吧，亲爱的朋友们。"可你从没靠近过战场。你从没把挚友的头抱在膝上，看着他咽下最后一口气，望着你求助。</span></p>
+
+      <p class="turn"><span class="spk sean">Sean</span><span class="en-text">And if I asked you about love, you'd probably quote me a <span class="tgt" data-key="k24">sonnet</span>. But you've never looked at a woman and been <span class="tgt" data-key="k17">totally vulnerable</span>. Known someone could <span class="tgt" data-key="k5">level you with her eyes</span>. Feeling like God put an angel on earth just for you, who could rescue you from <span class="tgt" data-key="k18">the depths of hell</span>. And you wouldn't know what it's like to be her angel, and to have that love for her be there forever. Through anything. Through cancer.</span><span class="zh-text">如果我问你爱情，你大概会背一首十四行诗给我。可你从没看着一个女人、彻底卸下防备。没体会过有人能用一个眼神就把你击倒。那种感觉就像上帝专门为你往人间放了一个天使，能把你从地狱深渊里救出来。你也不会知道，做她的天使、把那份爱永远守在那里是什么感觉。无论经历什么。哪怕癌症。</span></p>
+
+      <p class="turn"><span class="spk sean">Sean</span><span class="en-text">You wouldn't know about sleeping sitting up in a hospital room for two months, holding her hand, because the doctors could see in your eyes that the term "<span class="tgt" data-key="k19">visiting hours</span>" don't apply to you. You don't know about <span class="tgt" data-key="k21">real loss</span>, because that only occurs when you love something more than you love yourself. I doubt you've ever dared to love anybody that much.</span><span class="zh-text">你不会知道，在病房里坐着睡两个月、握着她的手是什么滋味——因为医生能从你眼里看出来，"探视时间"这四个字对你不适用。你不懂什么是真正的失去，因为那只会发生在你爱一样东西胜过爱自己的时候。我怀疑你从没敢那样爱过任何人。</span></p>
+
+      <p class="turn"><span class="spk sean">Sean</span><span class="en-text">I look at you; I don't see an intelligent, confident man; I see a <span class="tgt" data-key="k25">cocky</span>, scared kid. But you're a genius, Will. No one denies that. No one could possibly understand the depths of you. But you <span class="tgt" data-key="k20">presume to know</span> everything about me because you saw a painting of mine, and you <span class="tgt" data-key="k9">ripped my life apart</span>.</span><span class="zh-text">我看着你，我看到的不是一个聪明、自信的男人；我看到的是一个自大、吓坏了的孩子。但你是个天才，威尔。这点没人否认。没人能真正理解你有多深。可你就凭看过我的一幅画，就自以为对我无所不知，还把我的生活撕得粉碎。</span></p>
+
+      <p class="turn"><span class="spk sean">Sean</span><span class="en-text">You're an <span class="tgt" data-key="k26">orphan</span>, right? Do you think I'd know <span class="tgt" data-key="k4">the first thing about</span> how hard your life has been, how you feel, who you are, because I read Oliver Twist? Does that <span class="tgt" data-key="k27">encapsulate</span> you? Personally, I don't care about all that, because you know what? I can't learn anything from you I can't read in some book. Unless you wanna talk about you, who you are. And I'm fascinated. <span class="tgt" data-key="k8">I'm in.</span> But you don't wanna do that, do you, sport? You're <span class="tgt" data-key="k22">terrified of</span> what you might say. <span class="tgt" data-key="k7">Your move, chief.</span></span><span class="zh-text">你是孤儿，对吧？你觉得我读了《雾都孤儿》，就能懂你的日子有多难、你的感受、你是谁？那本书能概括你吗？说真的，这些我都不在乎，因为你知道吗？我从你身上学不到任何我在书里读不到的东西。除非你愿意谈谈你自己、你是谁。那我很有兴趣，我奉陪。可你不想，对吧，小子？你害怕自己会说出什么。该你了，老兄。</span></p>
+
+    </div>
+  </section>
+
+  <!-- ============ 词汇 ============ -->
+  <section>
+    <h2>④ 重点短语 · 地道表达 · 进阶单词</h2>
+    <p class="clickable-note">👆 <b>点击任意一行</b>，对应词句会在上方原文中高亮；再点一次取消。</p>
+
+    <h3>A. 地道表达 / 俚语（最值得直接搬去用）</h3>
+    <table>
+      <thead><tr><th style="width:31%">表达</th><th>释义与用法</th></tr></thead>
+      <tbody>
+        <tr class="vrow" data-keys="k1"><td class="term">give me the skinny on sth</td><td class="mean"><span class="tag">高频</span>把……的内情 / 门道全告诉我。<b>skinny</b> 口语里指"内幕消息"。
+          <span class="ex">Give me the skinny on the new boss. 跟我说说新老板的底细。</span></td></tr>
+        <tr class="vrow" data-keys="k2"><td class="term">the whole works</td><td class="mean">全部；一整套（= everything, all of it）。
+          <span class="ex">We had the cake, the candles, the whole works. 蛋糕、蜡烛，全都有。</span></td></tr>
+        <tr class="vrow" data-keys="k3"><td class="term">not have the faintest idea</td><td class="mean"><span class="tag">高频</span>压根儿不知道、毫无概念。<b>faintest</b> = 最微小的（加强否定）。
+          <span class="ex">I don't have the faintest idea where she went. 我完全不知道她去哪儿了。</span></td></tr>
+        <tr class="vrow" data-keys="k4"><td class="term">the first thing about sth</td><td class="mean">关于……的最基本知识（几乎只用在否定句里）。
+          <span class="ex">I don't know the first thing about cars. 我对车一窍不通。</span></td></tr>
+        <tr class="vrow" data-keys="k5"><td class="term">level sb with sth</td><td class="mean">用……把某人击倒 / 镇住。<b>level</b> 本义"夷平"，引申为"击垮"。
+          <span class="ex">She leveled him with one look. 她一个眼神就把他镇住了。</span></td></tr>
+        <tr class="vrow" data-keys="k6"><td class="term">gasp one's last breath</td><td class="mean">咽下最后一口气（文学化说法）。<b>gasp</b> = 喘息着说 / 喘气。</td></tr>
+        <tr class="vrow" data-keys="k7"><td class="term">Your move, chief.</td><td class="mean">该你了，老兄。<b>Your move</b> 原为棋类用语"轮到你走"；<b>chief</b> 是对男性的称呼，略带居高临下。</td></tr>
+        <tr class="vrow" data-keys="k8"><td class="term">I'm in.</td><td class="mean">我加入 / 我奉陪。极简的应允表达。
+          <span class="ex">— Anyone up for a movie? — I'm in. 我算一个。</span></td></tr>
+        <tr class="vrow" data-keys="k9"><td class="term">rip sth apart</td><td class="mean">把……撕碎；把……批得体无完肤。
+          <span class="ex">The critics ripped the film apart. 影评人把这部片批得体无完肤。</span></td></tr>
+        <tr class="vrow" data-keys="k10"><td class="term">throw Shakespeare at me</td><td class="mean">甩莎士比亚给我（用引经据典来搪塞）。<b>throw sth at sb</b> = 拿……来应付某人。</td></tr>
+      </tbody>
+    </table>
+
+    <h3>B. 常用短语与搭配</h3>
+    <table>
+      <thead><tr><th style="width:31%">表达</th><th>释义与用法</th></tr></thead>
+      <tbody>
+        <tr class="vrow" data-keys="k11"><td class="term">occur to sb</td><td class="mean">（想法）出现在某人脑中、某人想到。<span class="ex">It never occurred to me that he might be lying. 我从没想过他可能在撒谎。</span></td></tr>
+        <tr class="vrow" data-keys="k12"><td class="term">stay up half the night</td><td class="mean">熬到半夜（不睡）。<span class="ex">I stayed up half the night finishing it. 我熬到半夜才把它弄完。</span></td></tr>
+        <tr class="vrow" data-keys="k13"><td class="term">fall into a deep, peaceful sleep</td><td class="mean">沉沉睡去、安然入眠。<b>fall into</b> 常与 sleep / a coma / a trap 搭配。</td></tr>
+        <tr class="vrow" data-keys="k14"><td class="term">political aspirations</td><td class="mean">政治抱负。<b>aspiration</b> = 志向、抱负（比 ambition 更正式）。</td></tr>
+        <tr class="vrow" data-keys="k15"><td class="term">be out of (a place)</td><td class="mean">离开过某地、走出过某地。<span class="ex">He's never been out of his hometown. 他从没离开过家乡。</span></td></tr>
+        <tr class="vrow" data-keys="k16"><td class="term">wake up next to sb</td><td class="mean">在某人身边醒来（常指亲密关系中的日常）。</td></tr>
+        <tr class="vrow" data-keys="k17"><td class="term">totally vulnerable</td><td class="mean">完全卸下防备、毫无遮掩。<b>vulnerable</b> = 易受伤的、脆弱的。</td></tr>
+        <tr class="vrow" data-keys="k18"><td class="term">the depths of hell</td><td class="mean">地狱深渊（比喻极度痛苦的境地）。<b>depths</b> = 深处。</td></tr>
+        <tr class="vrow" data-keys="k19"><td class="term">visiting hours</td><td class="mean">（医院等的）探视时间。</td></tr>
+        <tr class="vrow" data-keys="k20"><td class="term">presume to do sth</td><td class="mean">自以为可以……、擅自断定。<span class="ex">Don't presume to tell me how to live. 别擅自教我怎么生活。</span></td></tr>
+        <tr class="vrow" data-keys="k21"><td class="term">real loss</td><td class="mean">真正的失去（本段的核心词，指失去所爱之人的痛）。</td></tr>
+        <tr class="vrow" data-keys="k22"><td class="term">be terrified of sth</td><td class="mean">极度害怕……。<b>terrified</b> 比 afraid 强烈得多。</td></tr>
+      </tbody>
+    </table>
+
+    <h3>C. 进阶 / 不常见单词</h3>
+    <table>
+      <thead><tr><th style="width:31%">单词</th><th>释义与用法</th></tr></thead>
+      <tbody>
+        <tr class="vrow" data-keys="k23"><td class="term">syllabus (n.)</td><td class="mean">教学大纲（此处是比喻：一份"清单"）。<span class="ex">the course syllabus 课程大纲</span></td></tr>
+        <tr class="vrow" data-keys="k24"><td class="term">sonnet (n.)</td><td class="mean">十四行诗（莎士比亚最著名的诗体）。</td></tr>
+        <tr class="vrow" data-keys="k25"><td class="term">cocky (adj.)</td><td class="mean">自大的、趾高气扬的（略带贬义）。<span class="ex">He's cocky but talented. 他有点狂，但有本事。</span></td></tr>
+        <tr class="vrow" data-keys="k26"><td class="term">orphan (n.)</td><td class="mean">孤儿。</td></tr>
+        <tr class="vrow" data-keys="k27"><td class="term">encapsulate (v.)</td><td class="mean">概括、浓缩体现。<span class="ex">That one word encapsulates the whole idea. 一个词就概括了整个想法。</span></td></tr>
+        <tr class="vrow" data-keys="k28"><td class="term">fetish (n.)</td><td class="mean">癖好、迷恋（此处是威尔在调侃）。</td></tr>
+      </tbody>
+    </table>
+
+    <h3>文化 / 典故（看懂梗，才算真听懂）</h3>
+    <div class="cult">
+      <div><b>Taster's Choice moment</b> — 雀巢速溶咖啡 Taster's Choice 的 90 年代广告里，一对邻居靠"喝咖啡"慢慢发展暧昧。"a Taster's Choice moment" 因此指两人之间有点暧昧的独处时刻，威尔是在讽刺这场约谈。</div>
+      <div><b>the Sistine Chapel</b> — 西斯廷教堂，米开朗基罗的天顶画所在地。肖恩的意思是：你能背出所有艺术史，却没真正站在那儿闻过它的气味。</div>
+      <div><b>Once more into the breach</b> — 出自莎士比亚《亨利五世》("Once more unto the breach, dear friends")，是战前鼓舞士气的名句，肖恩用它来讽刺威尔的"纸上谈兵"。</div>
+      <div><b>Oliver Twist</b> — 狄更斯《雾都孤儿》，讲一个孤儿的苦难。肖恩反问：读一本书，就能概括一个活生生的人吗？</div>
+    </div>
+  </section>
+
+  <!-- ============ 发音提示 ============ -->
+  <section>
+    <h2>⑤ 发音与连读提示</h2>
+    <div class="pron">
+      <div><b>You don't have the faintest idea…</b> — 重读 <i>faintest</i>，前面 <i>don't have the</i> 弱读连成一串；整句语气是"轻蔑地摇头"。</div>
+      <div><b>give me the skinny on</b> — <i>skinny on</i> 连读 /ˈskɪnijɒn/，别断开。</div>
+      <div><b>You don't know about real loss…</b> — 全段最重的一句。重读 <i>real loss</i>，前后来一个明显的<b>停顿</b>。</div>
+      <div><b>Your move, chief.</b> — 两个短句，中间<b>停顿明显</b>，句尾降调，收得干脆。</div>
+      <div><b>I'm in.</b> — 极短，重读 <i>in</i>，语气轻快，是全段少见的"示好"信号。</div>
+    </div>
+  </section>
+
+  <footer>
+    每日英语影视片段 · 第 004 期 · 2026-09-27<br>
+    台词仅供英语学习交流使用 · 原文引自影片对白
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  var script = document.getElementById('script');
+  var btn = document.getElementById('langBtn');
+
+  function setLang(lang) {
+    script.dataset.lang = lang;
+    btn.textContent = lang === 'zh' ? '🌐 显示英文原文' : '🌐 显示中文译文';
+  }
+
+  btn.addEventListener('click', function () {
+    setLang(script.dataset.lang === 'zh' ? 'en' : 'zh');
+  });
+
+  function clearAll() {
+    document.querySelectorAll('.tgt.active, .tgt.flash').forEach(function (e) {
+      e.classList.remove('active', 'flash');
+    });
+    document.querySelectorAll('.vrow.active').forEach(function (e) {
+      e.classList.remove('active');
+    });
+  }
+
+  function flash(el) {
+    el.classList.add('active', 'flash');
+    setTimeout(function () { el.classList.remove('flash'); }, 700);
+  }
+
+  function highlightKeys(keys) {
+    var first = null;
+    keys.forEach(function (k) {
+      document.querySelectorAll('.tgt[data-key="' + k + '"]').forEach(function (el) {
+        flash(el);
+        if (!first) first = el;
+      });
+    });
+    return first;
+  }
+
+  // 点击词汇行 -> 回原文高亮
+  document.querySelectorAll('.vrow').forEach(function (row) {
+    row.addEventListener('click', function () {
+      if (row.classList.contains('active')) { clearAll(); return; }
+      var keys = (row.dataset.keys || '').split(',').filter(Boolean);
+      clearAll();
+      if (script.dataset.lang === 'zh') { setLang('en'); }  // 高亮只在英文下可见
+      row.classList.add('active');
+      var first = highlightKeys(keys);
+      if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  });
+
+  // 点击原文词句 -> 高亮对应词汇行
+  document.querySelectorAll('.tgt').forEach(function (t) {
+    t.addEventListener('click', function (ev) {
+      ev.stopPropagation();
+      var k = t.dataset.key;
+      clearAll();
+      highlightKeys([k]);
+      var row = null;
+      document.querySelectorAll('.vrow').forEach(function (r) {
+        if (!row && (r.dataset.keys || '').split(',').indexOf(k) !== -1) { row = r; }
+      });
+      if (row) {
+        row.classList.add('active');
+        row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>

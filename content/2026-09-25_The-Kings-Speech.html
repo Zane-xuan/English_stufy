@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>每日英语影视片段 · 2026-09-25 · The King's Speech 首次会诊</title>
+<style>
+  :root{
+    --bg:#f7f6f3;
+    --card:#ffffff;
+    --ink:#16181d;
+    --ink-soft:#4a4f58;
+    --ink-faint:#8b9099;
+    --line:#e6e3dd;
+    --accent:#1c6b4a;
+    --accent-soft:#eaf5ef;
+    --gold:#8a6d1f;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"Segoe UI","PingFang SC","Microsoft YaHei",-apple-system,sans-serif;
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:40px 22px 80px;}
+
+  /* ---------- header ---------- */
+  .masthead{
+    border-top:6px solid var(--ink);
+    border-bottom:1px solid var(--line);
+    padding:22px 0 18px;
+    margin-bottom:30px;
+  }
+  .kicker{font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:10px;}
+  h1{font-size:31px;line-height:1.28;margin:0 0 12px;font-weight:800;letter-spacing:-.01em;}
+  h1 .sub{display:block;font-size:15px;font-weight:500;color:var(--ink-faint);letter-spacing:0;margin-top:8px;}
+  .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;}
+  .chip{font-size:12.5px;padding:4px 11px;border-radius:999px;background:#efece6;color:var(--ink-soft);border:1px solid var(--line);}
+  .chip.hot{background:var(--accent-soft);color:var(--accent);border-color:#c8e3d5;font-weight:600;}
+
+  /* ---------- sections ---------- */
+  section{margin-bottom:38px;}
+  h2{font-size:19px;font-weight:800;margin:0 0 16px;padding-left:12px;border-left:4px solid var(--accent);letter-spacing:-.01em;}
+  h3{font-size:15px;font-weight:700;color:var(--ink-soft);margin:22px 0 10px;}
+  p{margin:0 0 12px;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 22px;box-shadow:0 1px 2px rgba(20,20,30,.04);}
+
+  /* ---------- watch box ---------- */
+  .watch{display:flex;flex-wrap:wrap;gap:10px;}
+  .watch a{flex:1 1 220px;display:block;text-decoration:none;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;transition:.15s;}
+  .watch a:hover{border-color:var(--accent);box-shadow:0 3px 12px rgba(28,107,74,.10);transform:translateY(-1px);}
+  .watch .site{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);font-weight:700;}
+  .watch .ttl{font-size:14.5px;font-weight:700;margin-top:5px;line-height:1.45;}
+  .watch .note{font-size:12.5px;color:var(--ink-faint);margin-top:4px;}
+
+  /* ---------- script ---------- */
+  .langbar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:16px;}
+  .langbtn{
+    font-family:inherit;font-size:14px;font-weight:700;color:#fff;background:var(--ink);
+    border:none;border-radius:999px;padding:11px 24px;cursor:pointer;letter-spacing:.02em;
+    transition:.18s;box-shadow:0 2px 8px rgba(20,20,30,.14);
+  }
+  .langbtn:hover{background:var(--accent);transform:translateY(-1px);}
+  .langbtn:active{transform:translateY(0);}
+  .hint{font-size:12.5px;color:var(--ink-faint);line-height:1.5;}
+  .hint b{color:var(--gold);}
+
+  .script{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:24px 26px;box-shadow:0 1px 2px rgba(20,20,30,.04);}
+  .turn{margin:0 0 16px;font-size:16.5px;line-height:1.82;font-family:Georgia,"Times New Roman",serif;}
+  .turn:last-child{margin-bottom:0;}
+  .spk{
+    font-family:"Segoe UI","PingFang SC",sans-serif;font-size:11.5px;font-weight:800;
+    letter-spacing:.08em;text-transform:uppercase;margin-right:8px;vertical-align:1.5px;
+  }
+  .spk.lionel{color:var(--accent);}
+  .spk.bertie{color:#8a2f5f;}
+  .script[data-lang="en"] .zh-text{display:none;}
+  .script[data-lang="zh"] .en-text{display:none;}
+  .script[data-lang="zh"] .turn{font-family:"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;font-size:15.5px;line-height:1.95;color:var(--ink-soft);}
+
+  .tgt{cursor:pointer;border-radius:3px;padding:0 1px;transition:background .2s,box-shadow .2s;}
+  .tgt:hover{background:#eef4ff;}
+  .tgt.active{background:#ffe066;box-shadow:0 0 0 3px rgba(255,224,102,.8);}
+  @keyframes flash{0%{background:#fff6bf;box-shadow:0 0 0 7px rgba(255,224,102,.55);}100%{background:#ffe066;box-shadow:0 0 0 3px rgba(255,224,102,.8);}}
+  .tgt.flash{animation:flash .65s ease-out;}
+
+  /* ---------- vocab ---------- */
+  table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:14px;}
+  thead th{background:#f1eee8;text-align:left;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);padding:11px 14px;border-bottom:1px solid var(--line);font-weight:700;}
+  tbody td{padding:12px 14px;border-bottom:1px solid #f1efe9;vertical-align:top;line-height:1.6;}
+  tbody tr:last-child td{border-bottom:none;}
+  td.term{font-weight:700;color:var(--ink);white-space:nowrap;font-family:Georgia,"Times New Roman",serif;}
+  td.mean{color:var(--ink-soft);}
+  .tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 7px;border-radius:5px;background:var(--accent-soft);color:var(--accent);margin-right:6px;vertical-align:1px;}
+  .ex{color:var(--ink-faint);font-style:italic;display:block;margin-top:5px;font-size:13px;}
+  .vrow{cursor:pointer;transition:background .18s;}
+  .vrow:hover{background:#fbfaf5;}
+  .vrow.active{background:#fff8d9;}
+  .vrow.active td.term{color:var(--accent);}
+  .clickable-note{font-size:12.5px;color:var(--ink-faint);margin:-6px 0 14px;}
+  .clickable-note b{color:var(--gold);}
+
+  /* ---------- pronunciation ---------- */
+  .pron{background:#fbfaf7;border-left:3px solid var(--gold);border-radius:0 10px 10px 0;padding:14px 18px;font-size:14px;}
+  .pron div{margin-bottom:8px;}
+  .pron div:last-child{margin-bottom:0;}
+  .pron b{color:var(--ink);}
+  .cult{background:var(--accent-soft);border-radius:10px;padding:14px 18px;font-size:13.5px;color:var(--ink-soft);}
+  .cult div{margin-bottom:7px;}
+  .cult div:last-child{margin-bottom:0;}
+  .cult b{color:var(--ink);}
+
+  footer{margin-top:50px;padding-top:20px;border-top:1px solid var(--line);font-size:12.5px;color:var(--ink-faint);text-align:center;}
+  @media(max-width:600px){
+    h1{font-size:24px;}
+    .wrap{padding:24px 16px 60px;}
+    td.term{white-space:normal;}
+    .script{padding:18px 16px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="kicker">Daily English · Clip 002 · 影视对话戏</div>
+    <h1>一个平民医生，非要跟未来的国王平起平坐
+      <span class="sub">The King's Speech (2010) — First Consultation at Harley Street</span>
+    </h1>
+    <div class="meta">
+      <span class="chip hot">2026-09-25 · 周五</span>
+      <span class="chip">类型 · 影视对话戏</span>
+      <span class="chip">时长 ≈ 2 分半</span>
+      <span class="chip">难度 · 中高级</span>
+      <span class="chip">口音 · 英音（伦敦 / 澳洲）</span>
+    </div>
+  </header>
+
+  <!-- ============ 观看 ============ -->
+  <section>
+    <h2>① 先看片段</h2>
+    <div class="watch">
+      <a href="https://clip.cafe/the-kings-speech-2010/i-prefer-li-nel/" target="_blank" rel="noopener">
+        <div class="site">Clip.Cafe · 场景片段</div>
+        <div class="ttl">If we were equals, I wouldn't be here.</div>
+        <div class="note">这一段最精彩的几句，带逐句字幕</div>
+      </a>
+      <a href="https://www.youtube.com/results?search_query=The+King%27s+Speech+first+session+Lionel+Bertie" target="_blank" rel="noopener">
+        <div class="site">YouTube · 搜索</div>
+        <div class="ttl">The King's Speech — first session</div>
+        <div class="note">搜 "first session"，取完整会诊段</div>
+      </a>
+      <a href="https://search.bilibili.com/all?keyword=%E5%9B%BD%E7%8E%8B%E7%9A%84%E6%BC%94%E8%AE%B2" target="_blank" rel="noopener">
+        <div class="site">Bilibili · 搜索</div>
+        <div class="ttl">《国王的演讲》正片与片段</div>
+        <div class="note">首次会诊约在影片第 20 分钟</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- ============ 背景 ============ -->
+  <section>
+    <h2>② 场景背景</h2>
+    <div class="card">
+      <p>约克公爵伯蒂（Bertie，即后来的乔治六世）有严重口吃，一开口就卡住。妻子伊丽莎白瞒着他，找了个没有正规行医执照的澳洲人莱诺·罗格（Lionel Logue）。</p>
+      <p>诊所开在哈雷街，没有前台，墙上挂着孩子们做的飞机模型。伯蒂一进门就要求对方站到五步之外——这是他给自己划的安全距离。</p>
+      <p style="margin-bottom:0;">整场戏就是两个人在较劲：一个用身份和礼节把人推开，一个用"在这儿我说了算"把人拽回来。莱诺那句 <i>We must be true equals</i> 是全片的地基，后面两小时都建立在这句话上。</p>
+    </div>
+  </section>
+
+  <!-- ============ 台词 ============ -->
+  <section>
+    <h2>③ 原文台词</h2>
+    <div class="langbar">
+      <button class="langbtn" id="langBtn">🌐 显示中文译文</button>
+      <div class="hint">默认显示<b>英文原文</b>；点击左侧按钮整段切换为中文。<br>点击下方词汇表中任意一行 → 对应词句会在原文中<b>高亮定位</b>。</div>
+    </div>
+
+    <div class="script" id="script" data-lang="en">
+
+      <p class="turn"><span class="spk lionel">Lionel</span><span class="en-text">Any idea what you're <span class="tgt" data-key="k1">letting yourself in for</span>?</span><span class="zh-text">你知不知道你给自己揽上了什么事？</span></p>
+
+      <p class="turn"><span class="spk bertie">Bertie</span><span class="en-text">Apparently <span class="tgt" data-key="k2">a great deal of</span> rudeness, Doctor Logue.</span><span class="zh-text">看来是大量的失礼，罗格医生。</span></p>
+
+      <p class="turn"><span class="spk lionel">Lionel</span><span class="en-text"><span class="tgt" data-key="k11">Call me Lionel.</span></span><span class="zh-text">叫我莱诺就好。</span></p>
+
+      <p class="turn"><span class="spk bertie">Bertie</span><span class="en-text"><span class="tgt" data-key="k12">I prefer Doctor.</span></span><span class="zh-text">我更愿意被称"医生"。</span></p>
+
+      <p class="turn"><span class="spk lionel">Lionel</span><span class="en-text">I prefer Lionel. My family calls me <span class="tgt" data-key="k3">far worse</span>. <span class="tgt" data-key="k13">What shall I call you?</span></span><span class="zh-text">我更愿意被叫莱诺。我家里人叫我的更难听。我该怎么称呼你？</span></p>
+
+      <p class="turn"><span class="spk bertie">Bertie</span><span class="en-text">The Duke of York is <span class="tgt" data-key="k14">appropriate</span>.</span><span class="zh-text">称呼约克公爵比较合适。</span></p>
+
+      <p class="turn"><span class="spk lionel">Lionel</span><span class="en-text">Oh please.</span><span class="zh-text">哎，别这样。</span></p>
+
+      <p class="turn"><span class="spk bertie">Bertie</span><span class="en-text">Your Royal Highness then.</span><span class="zh-text">那就称殿下。</span></p>
+
+      <p class="turn"><span class="spk lionel">Lionel</span><span class="en-text">Much more informal.</span><span class="zh-text">这倒更随便了。</span></p>
+
+      <p class="turn"><span class="spk bertie">Bertie</span><span class="en-text">Prince Albert? Or Frederick? Arthur? George? I've lots of names to choose from.</span><span class="zh-text">阿尔伯特王子？还是弗雷德里克？亚瑟？乔治？我名字多得是，随便挑。</span></p>
+
+      <p class="turn"><span class="spk lionel">Lionel</span><span class="en-text">How about Bertie?</span><span class="zh-text">叫伯蒂怎么样？</span></p>
+
+      <p class="turn"><span class="spk bertie">Bertie</span><span class="en-text">Only my family uses that.</span><span class="zh-text">只有我家里人才那么叫。</span></p>
+
+      <p class="turn"><span class="spk lionel">Lionel</span><span class="en-text">That's what I'll call you then. We must be <span class="tgt" data-key="k15">true equals</span>.</span><span class="zh-text">那我就这么叫你。我们得是真正平等的。</span></p>
+
+      <p class="turn"><span class="spk bertie">Bertie</span><span class="en-text">If we were equal I wouldn't be here, I'd be at home with my family and no-one would <span class="tgt" data-key="k4">give a damn</span>.</span><span class="zh-text">要是我们平等，我就不会在这儿，我会在家跟家人待着，没人会在意我怎么样。</span></p>
+
+      <p class="turn"><span class="spk lionel">Lionel</span><span class="en-text">Don't do that. Sucking smoke into your lungs will kill you.</span><span class="zh-text">别抽那个。把烟吸进肺里会要你的命。</span></p>
+
+      <p class="turn"><span class="spk bertie">Bertie</span><span class="en-text">My physicians say it's good for stuttering, <span class="tgt" data-key="k16">relaxes the throat</span>.</span><span class="zh-text">我的医生们说这对口吃有好处，能放松喉咙。</span></p>
+
+      <p class="turn"><span class="spk lionel">Lionel</span><span class="en-text">They're idiots.</span><span class="zh-text">他们是一群蠢货。</span></p>
+
+      <p class="turn"><span class="spk bertie">Bertie</span><span class="en-text">They've all <span class="tgt" data-key="k17">been knighted</span>.</span><span class="zh-text">他们可都被封了爵位。</span></p>
+
+      <p class="turn"><span class="spk lionel">Lionel</span><span class="en-text"><span class="tgt" data-key="k10">Makes it official then</span>. <span class="tgt" data-key="k5">House rules</span>: no smoking.</span><span class="zh-text">那就等于是官方认证了。这儿的规矩：不许抽烟。</span></p>
+
+      <p class="turn"><span class="spk bertie">Bertie</span><span class="en-text">I thought here we're "equal".</span><span class="zh-text">我以为在这儿我们是"平等"的。</span></p>
+
+      <p class="turn"><span class="spk lionel">Lionel</span><span class="en-text">As a <span class="tgt" data-key="k29">monarchist</span> I thought you'd appreciate these are <span class="tgt" data-key="k6">my digs and here I rule</span>. No smoking. What was your <span class="tgt" data-key="k18">earliest memory</span>?</span><span class="zh-text">作为一个保皇派，我以为你会理解：这是我的地盘，这儿我说了算。不许抽烟。你最早的记忆是什么？</span></p>
+
+      <p class="turn"><span class="spk bertie">Bertie</span><span class="en-text"><span class="tgt" data-key="k7">I beg your pardon?</span></span><span class="zh-text">你说什么？</span></p>
+
+      <p class="turn"><span class="spk lionel">Lionel</span><span class="en-text">First recollection of the world?</span><span class="zh-text">对这世界最早的印象？</span></p>
+
+      <p class="turn"><span class="spk bertie">Bertie</span><span class="en-text">I'm not here to discuss <span class="tgt" data-key="k19">personal matters</span>.</span><span class="zh-text">我不是来谈私事的。</span></p>
+
+      <p class="turn"><span class="spk lionel">Lionel</span><span class="en-text">Why're you here then?</span><span class="zh-text">那你来这儿干什么？</span></p>
+
+      <p class="turn"><span class="spk bertie">Bertie</span><span class="en-text">Because I <span class="tgt" data-key="k8">bloody well</span> <span class="tgt" data-key="k30">stutter</span>! And you bloody well can't fix it!</span><span class="zh-text">因为我他妈口吃！而你他妈就是治不好！</span></p>
+
+      <p class="turn"><span class="spk lionel">Lionel</span><span class="en-text"><span class="tgt" data-key="k9">Temper.</span></span><span class="zh-text">脾气收一收。</span></p>
+
+      <p class="turn"><span class="spk bertie">Bertie</span><span class="en-text">One of my <span class="tgt" data-key="k28">numerous</span> faults.</span><span class="zh-text">我众多毛病里的一个。</span></p>
+
+      <p class="turn"><span class="spk lionel">Lionel</span><span class="en-text">Do you stutter when you think?</span><span class="zh-text">你思考的时候会口吃吗？</span></p>
+
+      <p class="turn"><span class="spk bertie">Bertie</span><span class="en-text"><span class="tgt" data-key="k20">Don't be ridiculous.</span></span><span class="zh-text">别胡说。</span></p>
+
+      <p class="turn"><span class="spk lionel">Lionel</span><span class="en-text">One of my many faults. How about when you talk to yourself?</span><span class="zh-text">这也是我众多毛病之一。那你自言自语的时候呢？</span></p>
+
+      <p class="turn"><span class="spk bertie">Bertie</span><span class="en-text">I don't talk to myself!</span><span class="zh-text">我才不自言自语！</span></p>
+
+      <p class="turn"><span class="spk lionel">Lionel</span><span class="en-text">Come on, everyone <span class="tgt" data-key="k23">natters to themselves</span> <span class="tgt" data-key="k22">once in a while</span>, Bertie.</span><span class="zh-text">得了吧，谁都会有自言自语的时候，伯蒂。</span></p>
+
+      <p class="turn"><span class="spk bertie">Bertie</span><span class="en-text"><span class="tgt" data-key="k21">Stop calling me that!</span></span><span class="zh-text">别那么叫我！</span></p>
+
+      <p class="turn"><span class="spk lionel">Lionel</span><span class="en-text"><span class="tgt" data-key="k24">Shan't</span> call you anything else.</span><span class="zh-text">别的我叫不出口。</span></p>
+
+      <p class="turn"><span class="spk bertie">Bertie</span><span class="en-text">Then we shan't speak! Must I pay for this?</span><span class="zh-text">那我们就别谈了！这我也得付钱吗？</span></p>
+
+      <p class="turn"><span class="spk lionel">Lionel</span><span class="en-text"><span class="tgt" data-key="k25">Loads.</span> Now: when you talk to yourself, do you stutter?</span><span class="zh-text">付得多着呢。好，你自言自语的时候，会口吃吗？</span></p>
+
+      <p class="turn"><span class="spk bertie">Bertie</span><span class="en-text">Of course not!</span><span class="zh-text">当然不会！</span></p>
+
+      <p class="turn"><span class="spk lionel">Lionel</span><span class="en-text">Proving your <span class="tgt" data-key="k26">impediment</span> isn't a <span class="tgt" data-key="k27">permanent internal fixture</span>.</span><span class="zh-text">这就证明你的口吃不是天生就长在身上的固定装置。</span></p>
+
+    </div>
+  </section>
+
+  <!-- ============ 词汇 ============ -->
+  <section>
+    <h2>④ 重点短语 · 地道表达 · 进阶单词</h2>
+    <p class="clickable-note">👆 <b>点击任意一行</b>，对应词句会在上方原文中高亮；再点一次取消。</p>
+
+    <h3>A. 地道表达 / 俚语（最值得直接搬去用）</h3>
+    <table>
+      <thead><tr><th style="width:31%">表达</th><th>释义与用法</th></tr></thead>
+      <tbody>
+        <tr class="vrow" data-keys="k1"><td class="term">let oneself in for sth</td><td class="mean"><span class="tag">高频</span>（不知不觉）给自己揽上、摊上某件麻烦事。常带警告或调侃语气。
+          <span class="ex">You've let yourself in for a lot of work. 你这下给自己揽了一大堆活。</span></td></tr>
+        <tr class="vrow" data-keys="k2"><td class="term">a great deal of</td><td class="mean">大量的。只接不可数名词，比 <i>a lot of</i> 正式一点。
+          <span class="ex">It took a great deal of patience. 这需要极大的耐心。</span></td></tr>
+        <tr class="vrow" data-keys="k3"><td class="term">far worse</td><td class="mean">难听得多、糟得多。<b>far</b> 放在比较级前表示"……得多"，是最省事的加强方式。
+          <span class="ex">The reality is far worse than the rumour. 实情比传言糟得多。</span></td></tr>
+        <tr class="vrow" data-keys="k4"><td class="term">not give a damn</td><td class="mean">一点都不在乎。几乎只用在否定句里，语气比 <i>don't care</i> 重得多。
+          <span class="ex">He doesn't give a damn what people think. 别人怎么想他压根不在乎。</span></td></tr>
+        <tr class="vrow" data-keys="k5"><td class="term">house rules</td><td class="mean">（某个场所的）自己的规矩。原意是赌场或酒吧的"本店规则"，引申为"到了我这儿就得按我的来"。
+          <span class="ex">House rules: phones off at dinner. 这儿的规矩：吃饭时手机收起来。</span></td></tr>
+        <tr class="vrow" data-keys="k6"><td class="term">my digs and here I rule</td><td class="mean">这是我的地盘，这儿我说了算。<b>digs</b> 是英式口语的"住处、窝"；<b>rule</b> 作动词是"统治、说了算"。</td></tr>
+        <tr class="vrow" data-keys="k7"><td class="term">I beg your pardon?</td><td class="mean">你说什么？表面客气，实际是被冒犯时的反问。语调一定要<b>上扬</b>，降调就变成"对不起"了。
+          <span class="ex">I beg your pardon? Would you mind repeating that? 你说什么？能再说一遍吗？</span></td></tr>
+        <tr class="vrow" data-keys="k8"><td class="term">bloody well</td><td class="mean">英式粗口的"加强版"，相当于"就是、他妈的"。放在动词前加重语气。<b>bloody</b> 在正式场合算脏话，别在英式职场乱用。
+          <span class="ex">I bloody well told you so. 我他妈早跟你说过了。</span></td></tr>
+        <tr class="vrow" data-keys="k9"><td class="term">Temper.</td><td class="mean">脾气收一收。一个词当一句话用，通常是长辈或老师对失控的人说的。同类还有 <i>Language!</i>（别说脏话）。</td></tr>
+        <tr class="vrow" data-keys="k10"><td class="term">Makes it official then.</td><td class="mean">那就等于官方盖章了。反讽用法：用"既然官方都认了"来嘲讽对方的论据其实站不住脚。<b>then</b> 放在句尾表示"那这么说来"。</td></tr>
+      </tbody>
+    </table>
+
+    <h3>B. 常用短语与搭配</h3>
+    <table>
+      <thead><tr><th style="width:31%">表达</th><th>释义与用法</th></tr></thead>
+      <tbody>
+        <tr class="vrow" data-keys="k11"><td class="term">Call me Lionel.</td><td class="mean">叫我莱诺就好。自我介绍时拉近距离的固定说法，比 <i>My name is…</i> 更随意。</td></tr>
+        <tr class="vrow" data-keys="k12"><td class="term">I prefer Doctor.</td><td class="mean">我更愿意被称"医生"。<b>prefer</b> 后面直接跟名词，表示偏好；用在称呼上是一种礼貌的拒绝。</td></tr>
+        <tr class="vrow" data-keys="k13"><td class="term">What shall I call you?</td><td class="mean">我该怎么称呼你？<b>shall</b> 在第一人称疑问句里表示征询意见，比 <i>should</i> 更传统也更客气。</td></tr>
+        <tr class="vrow" data-keys="k14"><td class="term">appropriate (adj.)</td><td class="mean">合适的、得体的。比 <i>suitable</i> 更强调"合乎场合与身份"。
+          <span class="ex">That's not appropriate at a funeral. 这在葬礼上不合适。</span></td></tr>
+        <tr class="vrow" data-keys="k15"><td class="term">true equals</td><td class="mean">真正平等的人。<b>equal</b> 在这里是名词"地位相同的人"；<b>true</b> 强调"从里到外的、不是嘴上说说的"。</td></tr>
+        <tr class="vrow" data-keys="k16"><td class="term">relax the throat</td><td class="mean">放松喉咙。<b>relax</b> 搭配身体部位很常见：<i>relax your shoulders</i>、<i>relax the muscles</i>。</td></tr>
+        <tr class="vrow" data-keys="k17"><td class="term">be knighted</td><td class="mean">被封为爵士。英国君主用剑轻触受封者肩部，受封后名字前加 <b>Sir</b>。这是英国特有的荣誉制度，不是世袭爵位。</td></tr>
+        <tr class="vrow" data-keys="k18"><td class="term">earliest memory</td><td class="mean">最早的记忆。也可以用 <i>first recollection</i>，意思一样，<b>recollection</b> 更书面。
+          <span class="ex">My earliest memory is of a green door. 我最早的记忆是一扇绿色的门。</span></td></tr>
+        <tr class="vrow" data-keys="k19"><td class="term">personal matters</td><td class="mean">私事、私人事务。正式场合常用的委婉说法，用来划界限。
+          <span class="ex">I'd rather not discuss personal matters here. 我不太想在这儿谈私事。</span></td></tr>
+        <tr class="vrow" data-keys="k20"><td class="term">Don't be ridiculous.</td><td class="mean">别胡说、别瞎扯。比 <i>That's wrong</i> 更带情绪，是"你这想法本身就荒唐"。</td></tr>
+        <tr class="vrow" data-keys="k21"><td class="term">Stop calling me that!</td><td class="mean">别那么叫我！<b>stop doing sth</b> 表示"停止正在做的事"，这里语气是恼怒而非请求。</td></tr>
+        <tr class="vrow" data-keys="k22"><td class="term">once in a while</td><td class="mean">偶尔、隔一阵子。和 <i>sometimes</i> 比，频率更低、更随意。
+          <span class="ex">We still meet up once in a while. 我们偶尔还会见个面。</span></td></tr>
+        <tr class="vrow" data-keys="k23"><td class="term">natter to oneself</td><td class="mean">自言自语。<b>natter</b> 是英式口语的"闲聊、絮叨"，比 <i>talk to oneself</i> 更有画面感。</td></tr>
+        <tr class="vrow" data-keys="k24"><td class="term">Shan't</td><td class="mean">= shall not。英式口语里依然活跃，美式基本不用。<b>Then we shan't speak.</b> 意思是"那我们就别谈了"，是赌气话。</td></tr>
+        <tr class="vrow" data-keys="k25"><td class="term">Loads.</td><td class="mean">（要付）很多。英式口语里 <b>loads</b> = <i>a lot</i>，可以单独成句回答"多少钱""多少"。
+          <span class="ex">— How much? — Loads. 多少钱？多着呢。</span></td></tr>
+      </tbody>
+    </table>
+
+    <h3>C. 进阶 / 不常见单词</h3>
+    <table>
+      <thead><tr><th style="width:31%">单词</th><th>释义与用法</th></tr></thead>
+      <tbody>
+        <tr class="vrow" data-keys="k26"><td class="term">impediment (n.)</td><td class="mean">障碍、阻碍；在言语语境里专指"口吃、言语障碍"。比 <i>problem</i> 正式得多，医学与法律文本里常见。</td></tr>
+        <tr class="vrow" data-keys="k27"><td class="term">permanent internal fixture</td><td class="mean">永久的内在固定装置。<b>fixture</b> 本义是"固定安装在房子里的东西"（水管、灯具），这里拿它比喻"长在身上、拆不掉的东西"，是全场最关键的一个比喻。</td></tr>
+        <tr class="vrow" data-keys="k28"><td class="term">numerous (adj.)</td><td class="mean">众多的、许多的。只修饰可数名词，比 <i>many</i> 正式。
+          <span class="ex">We've had numerous complaints. 我们收到过大量投诉。</span></td></tr>
+        <tr class="vrow" data-keys="k29"><td class="term">monarchist (n.)</td><td class="mean">君主主义者、拥护君主制的人。<b>monarch</b> 君主，<b>-ist</b> 表"……主义者"。莱诺用这个词是在点伯蒂：你是王室的人，总该懂"我的地盘我做主"。</td></tr>
+        <tr class="vrow" data-keys="k30"><td class="term">stutter (v./n.)</td><td class="mean">口吃、结巴。作动词时指"说话卡住"；作名词是"口吃这个毛病"。注意和 <b>stammer</b> 同义，英式更常用后者。</td></tr>
+      </tbody>
+    </table>
+
+    <h3>文化 / 典故（看懂梗，才算真听懂）</h3>
+    <div class="cult">
+      <div><b>五步之外</b> — 伯蒂一进门就要求莱诺站远点，说"五步是规矩"。历史上乔治六世确实有这种强迫性的距离要求，跟他的口吃同源，都是童年被严苛对待留下的东西。</div>
+      <div><b>为什么是"约克公爵"</b> — 伯蒂当时的正式封号是约克公爵，还不是国王。他要靠头衔把对方按下去，莱诺偏不吃这一套，这才是这场戏的张力所在。</div>
+      <div><b>Harley Street</b> — 伦敦著名的私人诊所一条街，全英最贵的医生都在那儿。所以伯蒂才会讽刺"收着高昂诊费来帮穷人"。</div>
+      <div><b>没有执照的医生</b> — 莱诺·罗格是澳洲人，没有英国的行医资格，靠的是自己摸索出来的方法。影片里他一直自称"不是医生"，这一点也是两人冲突的来源。</div>
+    </div>
+  </section>
+
+  <!-- ============ 发音提示 ============ -->
+  <section>
+    <h2>⑤ 发音与连读提示</h2>
+    <div class="pron">
+      <div><b>Any idea what you're letting yourself in for?</b> — <i>what you're</i> 连读成 /ˈwɒtʃə/；<i>in for</i> 连读。整句是随口一问的语气，句尾别往上挑。</div>
+      <div><b>Call me Lionel. / I prefer Doctor.</b> — 两组都是短句，重音都落在<b>后半个人名/头衔</b>上。这两句是全场的"较劲"起点，节奏要快要干。</div>
+      <div><b>If we were equal I wouldn't be here…</b> — 全段最重的一句。<i>wouldn't</i> 里的 <i>t</i> 几乎不发音，整句是"低声说重话"，音量不大但停顿明显。</div>
+      <div><b>Because I bloody well stutter!</b> — <i>bloody well</i> 三词连成一串快速带过，重音全在 <b>stutter</b> 上，句尾是爆发的降调。</div>
+      <div><b>Proving your impediment isn't a permanent internal fixture.</b> — 莱诺语速平稳、几乎不带感情，重音落在 <b>permanent</b> 和 <b>fixture</b> 上。这句是"结论句"，要念得慢、念得稳。</div>
+    </div>
+  </section>
+
+  <footer>
+    每日英语影视片段 · 第 002 期 · 2026-09-25<br>
+    台词仅供英语学习交流使用 · 原文引自影片对白
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  var script = document.getElementById('script');
+  var btn = document.getElementById('langBtn');
+
+  function setLang(lang) {
+    script.dataset.lang = lang;
+    btn.textContent = lang === 'zh' ? '🌐 显示英文原文' : '🌐 显示中文译文';
+  }
+
+  btn.addEventListener('click', function () {
+    setLang(script.dataset.lang === 'zh' ? 'en' : 'zh');
+  });
+
+  function clearAll() {
+    document.querySelectorAll('.tgt.active, .tgt.flash').forEach(function (e) {
+      e.classList.remove('active', 'flash');
+    });
+    document.querySelectorAll('.vrow.active').forEach(function (e) {
+      e.classList.remove('active');
+    });
+  }
+
+  function flash(el) {
+    el.classList.add('active', 'flash');
+    setTimeout(function () { el.classList.remove('flash'); }, 700);
+  }
+
+  function highlightKeys(keys) {
+    var first = null;
+    keys.forEach(function (k) {
+      document.querySelectorAll('.tgt[data-key="' + k + '"]').forEach(function (el) {
+        flash(el);
+        if (!first) first = el;
+      });
+    });
+    return first;
+  }
+
+  // 点击词汇行 -> 回原文高亮
+  document.querySelectorAll('.vrow').forEach(function (row) {
+    row.addEventListener('click', function () {
+      if (row.classList.contains('active')) { clearAll(); return; }
+      var keys = (row.dataset.keys || '').split(',').filter(Boolean);
+      clearAll();
+      if (script.dataset.lang === 'zh') { setLang('en'); }  // 高亮只在英文下可见
+      row.classList.add('active');
+      var first = highlightKeys(keys);
+      if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  });
+
+  // 点击原文词句 -> 高亮对应词汇行
+  document.querySelectorAll('.tgt').forEach(function (t) {
+    t.addEventListener('click', function (ev) {
+      ev.stopPropagation();
+      var k = t.dataset.key;
+      clearAll();
+      highlightKeys([k]);
+      var row = null;
+      document.querySelectorAll('.vrow').forEach(function (r) {
+        if (!row && (r.dataset.keys || '').split(',').indexOf(k) !== -1) { row = r; }
+      });
+      if (row) {
+        row.classList.add('active');
+        row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>

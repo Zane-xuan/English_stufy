@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}{% if current %}{{ current.title or current.file_name }} · {% endif %}English Study{% endblock %}
+
+{% block now %}
+{% if current %}
+<span class="now">
+  {% if day_index %}今天 · 资源第 <b>{{ day_index }}</b>/<b>{{ day_total }}</b> 天{% else %}今天不在这份资源的服务区间内{% endif %}
+  · <b>{{ current.publish_date or "日期未知" }}</b> 发布
+  {%- if current.period %} · 第 <b>{{ "%03d"|format(current.period) }}</b> 期{% endif %}
+  {%- if current.category %} · <b>{{ current.category }}</b>{% endif %}
+</span>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+
+{% if not_found %}
+<div class="empty">
+  没有找到这一期（{{ requested }}）。<br>
+  点右上角「历史回顾」，从列表里选一天。
+</div>
+
+{% elif current and file_exists %}
+  {# 原始页面内嵌：样式已加 #clip-root 前缀，脚本单独注入 #}
+  <style>{{ fragment.css | safe }}</style>
+  <article id="clip-root" class="clip-root">{{ fragment.html | safe }}</article>
+  <script>{{ fragment.script | safe }}</script>
+
+{% elif current %}
+<div class="empty">
+  这一期的 HTML 文件已不在磁盘上。<br>
+  把 <code>{{ current.file_name }}</code> 放回 <code>content/</code> 后重新扫描即可恢复。
+</div>
+
+{% else %}
+<div class="empty">
+  还没有学习记录。<br>
+  把生成的 HTML 放进 <code>content/</code> 目录后，执行 <code>python -m app.scan</code>。
+</div>
+{% endif %}
+
+{% endblock %}

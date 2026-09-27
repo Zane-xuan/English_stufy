@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}English Study{% endblock %}</title>
+<link rel="stylesheet" href="/static/style.css">
+<script>
+// 在首次绘制前恢复抽屉状态，避免展开动画闪一下
+(function () {
+  try {
+    if (sessionStorage.getItem('drawer') === 'open') {
+      document.documentElement.classList.add('drawer-open');
+    }
+  } catch (e) { /* 忽略 */ }
+})();
+</script>
+</head>
+<body>
+<div class="app">
+
+  <div class="pane">
+    <header class="topbar">
+      <div>
+        <div class="kicker">Daily English · 口语学习站</div>
+        <a class="site-name" href="/">英语口语学习</a>
+      </div>
+      <div class="topbar-side">
+        {% block now %}{% endblock %}
+        <button class="navbtn primary" id="drawerToggle" type="button"
+                aria-expanded="false" aria-controls="sidebar">
+          <span class="chev" aria-hidden="true"></span>历史回顾
+        </button>
+      </div>
+    </header>
+
+    <main class="content">
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+      English Study · 自用学习站<br>
+      台词仅供英语学习交流使用 · 原文引自影片对白
+    </footer>
+  </div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-inner">
+
+      <div class="sidebar-head">
+        <div>
+          <div class="kicker">History</div>
+          <h2>历史回顾</h2>
+        </div>
+        <button class="iconbtn" id="drawerClose" type="button" aria-label="收起历史回顾">×</button>
+      </div>
+
+      <form class="filter" method="get" action="/">
+        {% if current %}<input type="hidden" name="d" value="{{ current.slug }}">{% endif %}
+        <input type="text" name="q" value="{{ q }}" placeholder="搜标题或影片名">
+        <select name="category">
+          <option value="">全部类型</option>
+          {% for item in categories %}
+          <option value="{{ item }}" {% if item == category %}selected{% endif %}>{{ item }}</option>
+          {% endfor %}
+        </select>
+        <div class="filter-actions">
+          <button class="btn" type="submit">筛选</button>
+          {% if q or category %}
+          <a class="btn ghost" href="{% if current %}/?d={{ current.slug }}{% else %}/{% endif %}">重置</a>
+          {% endif %}
+        </div>
+      </form>
+
+      {% if items %}
+      <div class="daylist">
+        {% for clip in items %}
+        <a class="dayitem {% if current and clip.slug == current.slug %}active{% endif %}"
+           href="/?d={{ clip.slug }}">
+          <div class="dayitem-date">
+            <span class="chip hot">{{ clip.publish_date or "日期未知" }}</span>
+            {% if clip.period %}<span class="chip">第 {{ "%03d"|format(clip.period) }} 期</span>{% endif %}
+            {% if clip.focus_start and clip.focus_start <= today and today <= clip.focus_end %}<span class="chip now">服务中</span>{% endif %}
+          </div>
+          <div class="dayitem-title">{{ clip.title or clip.file_name }}</div>
+          {% if clip.subtitle %}<div class="dayitem-sub">{{ clip.subtitle }}</div>{% endif %}
+          {% if clip.focus_start %}<div class="dayitem-focus">服务 {{ clip.focus_start }} 至 {{ clip.focus_end }}</div>{% endif %}
+        </a>
+        {% endfor %}
+      </div>
+      <p class="daylist-count">
+        {% if q or category %}匹配 {{ items|length }} 期{% else %}共 {{ items|length }} 期{% endif %}
+      </p>
+      {% elif q or category %}
+      <div class="empty">没有匹配的期数，换个条件或点「重置」。</div>
+      {% else %}
+      <div class="empty">
+        还没有往期记录。<br>
+        把 HTML 放进 <code>content/</code> 后执行 <code>python -m app.scan</code>。
+      </div>
+      {% endif %}
+
+    </div>
+  </aside>
+
+</div>
+<div class="backdrop" id="backdrop"></div>
+<script src="/static/app.js"></script>
+</body>
+</html>
